@@ -1,175 +1,151 @@
-# AI 编码助手 — Neovim 中的 AI 集成
+# GitHub Copilot + CodeCompanion — AI 编码助手深度解析
 
-> **TL;DR**: 推荐组合：**copilot.lua**（内联补全）+ **CodeCompanion.nvim**（AI 聊天）。CodeCompanion 是 2025-2026 年最推荐的多后端 AI 平台。
-
----
-
-## 1. 各插件定位对比
-
-| 插件 | 定位 | 后端 | 推荐场景 |
-|------|------|------|----------|
-| **copilot.lua** | 内联代码补全 | GitHub Copilot | Tab 补全（首选） |
-| **CodeCompanion.nvim** | 通用 AI 平台 | Claude/OpenAI/Copilot/Ollama | **推荐** 聊天 + 内联编辑 |
-| **CopilotChat.nvim** | Copilot 聊天 | GitHub Copilot | Copilot 订阅用户 |
-| **avante.nvim** | Cursor 风格 | Claude/OpenAI | 重构/审查（diff-first） |
-
-> 对比来源：[avante vs CodeCompanion 2026](https://samuellawrentz.com/blog/neovim-ai-plugins-avante-codecompanion/) | [CodeCompanion GitHub](https://github.com/olimorris/codecompanion.nvim)
+> **TL;DR**: 推荐双轨制：**copilot.lua**（内联 Tab 补全）+ **CodeCompanion.nvim**（AI 聊天）。本章逐句解析两者完整配置。
 
 ---
 
-## 2. 推荐组合：copilot.lua + CodeCompanion
+## 1. 生态定位速查
 
-### 2.1 copilot.lua（内联补全）
+| 插件 | 定位 | 后端 | 何时用 |
+|------|------|------|--------|
+| **copilot.lua** | 内联代码补全 | GitHub Copilot | Tab 补全 |
+| **CodeCompanion** | 通用 AI 平台 | Claude/OpenAI/Copilot/Ollama | 聊天/重构/解答 |
+
+---
+
+## 2. 逐行注解：copilot.lua
 
 ```lua
--- lua/plugins/ai.lua
+-- ============================================================================
+-- lua/plugins/ai.lua — GitHub Copilot 内联补全
+-- ============================================================================
+
 return {
-  -- GitHub Copilot 内联补全
   {
+    -- (1) 纯 Lua Copilot 客户端，替代官方 copilot.vim（Node.js 版）
     "zbirenbaum/copilot.lua",
+
+    -- (2) cmd + event 驱动的懒加载
+    --     ╔══════════════════════════════════════════╗
+    --     ║ cmd/event 语义详见：                       ║
+    --     ║ → 02-plugin-manager/lazy-nvim.md §3.2    ║
+    --     ╚══════════════════════════════════════════╝
     cmd = "Copilot",
     event = "InsertEnter",
+
     opts = {
       suggestion = {
         enabled = true,
-        auto_trigger = false, -- 手动触发，减少干扰
+
+        -- (3) auto_trigger = false — 禁用自动触发
+        --     按需手动请求建议，避免与 blink.cmp 的补全菜单冲突
+        auto_trigger = false,
+
+        -- (4) keymap — 用 <M-> (Meta/Alt) 前缀避免冲突
         keymap = {
-          accept = "<M-l>",   -- Alt+l 接受建议
-          next = "<M-]>",     -- Alt+] 下一个建议
-          prev = "<M-[>",     -- Alt+[ 上一个建议
-          dismiss = "<C-]>",  -- Ctrl+] 关闭
+          accept = "<M-l>",    -- (4a) Alt+l → 接受当前建议
+          next = "<M-]>",      -- (4b) Alt+] → 下一个备选方案
+          prev = "<M-[>",      -- (4c) Alt+[ → 上一个备选方案
+          dismiss = "<C-]>",   -- (4d) Ctrl+] → 关闭建议
         },
       },
-      panel = { enabled = true },
+      panel = {
+        enabled = true,         -- (5) :Copilot panel 侧边栏浏览多个建议
+      },
+      -- (6) 指定 Node.js 路径（>= v22）
+      copilot_node_command = "node",
     },
   },
 }
 ```
 
-### 2.2 CodeCompanion.nvim（AI 聊天）
+---
+
+## 3. 逐行注解：CodeCompanion.nvim
 
 ```lua
-  -- CodeCompanion：统一 AI 接口
+-- ============================================================================
+-- lua/plugins/ai.lua 续 — CodeCompanion AI 聊天
+-- ============================================================================
+
+return {
   {
+    -- (7) 多后端 AI 接口 — 一个插件管理所有 LLM
     "olimorris/codecompanion.nvim",
+
+    -- (8) plenary 提供异步 HTTP/JSON 工具
+    --     treesitter 为聊天 buffer 提供语法高亮
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
+
+    -- (9) 快捷键：keys 驱动的懒加载
     keys = {
-      -- 内联助手（在光标位置插入 AI 代码）
-      { "<leader>aa", "<cmd>CodeCompanion<CR>", mode = { "n", "v" }, desc = "AI 内联助手" },
-      -- 聊天缓冲区
-      { "<leader>ac", "<cmd>CodeCompanionChat<CR>", desc = "AI 聊天" },
-      -- 命令生成
-      { "<leader>aC", "<cmd>CodeCompanionCmd<CR>", desc = "AI 命令" },
+      -- (9a) <leader>aa → 内联助手（在光标处插入 AI 代码）
+      --      在 Visual 模式则会基于选中内容
+      { "<leader>aa", "<cmd>CodeCompanion<CR>",
+        mode = { "n", "v" }, desc = "AI 内联" },
+      -- (9b) <leader>ac → 聊天缓冲区（Ctrl+S 发送消息）
+      { "<leader>ac", "<cmd>CodeCompanionChat<CR>",
+        desc = "AI 聊天" },
+      -- (9c) <leader>aC → 自然语言生成 Vim 命令
+      { "<leader>aC", "<cmd>CodeCompanionCmd<CR>",
+        desc = "AI 命令" },
     },
+
     opts = {
-      -- 策略配置：在这里选择使用的后端
+      -- (10) strategies — 不同交互模式可指定不同后端
       strategies = {
-        chat = { adapter = "copilot" },     -- 使用 Copilot（免费/订阅）
+        -- (10a) 聊天用 Copilot（订阅用户无需额外 API key）
+        chat = { adapter = "copilot" },
         inline = { adapter = "copilot" },
         cmd = { adapter = "copilot" },
+
+        -- (10b) 没有 Copilot？换用其他后端：
+        -- chat = { adapter = "anthropic" },  -- 需要 ANTHROPIC_API_KEY
+        -- chat = { adapter = "openai" },     -- 需要 OPENAI_API_KEY
+        -- chat = { adapter = "ollama" },     -- 本地免费模型
       },
-      -- 自定义适配器（示例：添加 Ollama 本地模型）
+
+      -- (11) 自定义适配器——添加 Ollama 本地模型
       -- adapters = {
-      --   ollama = function()
+      --   ollama_local = function()
       --     return require("codecompanion.adapters").extend("ollama", {
-      --       name = "ollama",
+      --       -- 所有参数均已有合理默认值，只需提供名称
       --     })
       --   end,
       -- },
     },
-    config = function(_, opts)
-      require("codecompanion").setup(opts)
-    end,
-  },
-```
-
-**支持的适配器（开箱即用）**：
-- `copilot` — GitHub Copilot（免费/订阅）
-- `anthropic` — Claude（API 按量付费）
-- `openai` — GPT-4o（API 按量付费）
-- `gemini` — Google Gemini
-- `ollama` — 本地模型（隐私/免费）
-- `deepseek` — DeepSeek
-- `azure_openai` — Azure OpenAI
-
-**CodeCompanion 的核心功能**：
-
-| 命令 | 功能 |
-|------|------|
-| `:CodeCompanionChat` | 打开 AI 聊天缓冲区 |
-| `:CodeCompanion <prompt>` | 内联编辑（在光标位置插入 AI 代码） |
-| `:CodeCompanionCmd` | 生成 Vim 命令 |
-| `:CodeCompanionActions` | 打开操作面板 |
-
-**编辑器上下文变量**：
-- `@lsp` — 注入当前文件的 LSP 诊断
-- `@buffers` — 注入所有打开缓冲区
-- `@editor` — 注入当前文件的代码
-- `#buffer` — 引用特定缓冲区
-
-> 来源：[CodeCompanion 官方文档](https://codecompanion.olimorris.dev/) | [CodeCompanion GitHub](https://github.com/olimorris/codecompanion.nvim)
-
----
-
-## 3. 备选：avante.nvim（Cursor 风格）
-
-如果你偏好 Cursor IDE 的 diff-first 工作流：
-
-```lua
-{
-  "yetone/avante.nvim",
-  build = "make",
-  opts = {
-    provider = "claude",
-    providers = {
-      claude = {
-        model = "claude-sonnet-4-20250514",
-        timeout = 30000,
-      },
-    },
-  },
-  keys = {
-    { "<leader>av", "<cmd>AvanteToggle<CR>", desc = "Avante AI" },
   },
 }
 ```
 
-**avante vs CodeCompanion 选型建议**：
-- **重构/审查** → avante（diff-first 工作流）
-- **日常问答/调试** → CodeCompanion（轻量、灵活）
-- **两者都用** → 绑定不同快捷键，互补不冲突
+---
+
+## 4. CodeCompanion 适配器速查
+
+| 适配器 | 后端 | 费用模式 | 环境变量 |
+|--------|------|----------|----------|
+| `copilot` | GitHub Copilot | 订阅 / 免费额度 | 无（通过 copilot.lua 认证） |
+| `anthropic` | Claude | API 按量 | `ANTHROPIC_API_KEY` |
+| `openai` | GPT-4o | API 按量 | `OPENAI_API_KEY` |
+| `gemini` | Google Gemini | API 按量 | `GEMINI_API_KEY` |
+| `ollama` | 本地模型 | **免费** | 无（需先 `ollama pull <model>`） |
 
 ---
 
-## 4. 系统依赖
+## 5. 对比：三大 AI 插件
 
-```bash
-# CodeCompanion / copilot.lua
-# 无额外依赖，通过 API 通信
+| 功能 | copilot.lua | CodeCompanion | avante.nvim |
+|------|:-----------:|:-------------:|:-----------:|
+| Tab 补全 | ✅ **核心** | ❌ | ❌ |
+| AI 聊天 | ❌ | ✅ | ✅ |
+| 多后端 | ❌ | ✅ 7+ | ✅ 4+ |
+| LSP 诊断注入 | ❌ | ✅ `@lsp` | 部分 |
+| 内联编辑 | ❌ | ✅ | ✅ diff-first |
 
-# 本地模型
-curl -fsSL https://ollama.com/install.sh | sh  # Ollama
-ollama pull codellama:7b                          # 下载模型
-```
-
----
-
-## 5. 按键最佳实践
-
-```lua
--- 内联补全
-vim.keymap.set("i", "<M-l>", function() require("copilot.suggestion").accept() end,
-  { desc = "接受 Copilot 建议" })
-
--- AI 聊天
-vim.keymap.set({ "n", "v" }, "<leader>aa", "<cmd>CodeCompanion<CR>",
-  { desc = "AI 内联" })
-vim.keymap.set("n", "<leader>ac", "<cmd>CodeCompanionChat<CR>",
-  { desc = "AI 聊天" })
-```
+**推荐**：copilot.lua + CodeCompanion 互补。一个补全，一个聊天。绑定不同快捷键，无冲突。
 
 ---
 
@@ -178,8 +154,5 @@ vim.keymap.set("n", "<leader>ac", "<cmd>CodeCompanionChat<CR>",
 | 资源 | URL |
 |------|-----|
 | copilot.lua | https://github.com/zbirenbaum/copilot.lua |
-| CodeCompanion.nvim | https://github.com/olimorris/codecompanion.nvim |
-| CodeCompanion 文档 | https://codecompanion.olimorris.dev/ |
+| CodeCompanion.nvim | https://codecompanion.olimorris.dev/ |
 | avante.nvim | https://github.com/yetone/avante.nvim |
-| avante vs CodeCompanion 2026 | https://samuellawrentz.com/blog/neovim-ai-plugins-avante-codecompanion/ |
-| CopilotChat.nvim | https://github.com/CopilotC-Nvim/CopilotChat.nvim |

@@ -150,3 +150,16 @@ vim.fn.stdpath("state")  -- ~/.local/state/nvim
 vim.fn.stdpath("cache")  -- ~/.cache/nvim
 vim.fn.stdpath("run")    -- /run/user/1000/nvim.xxx
 ```
+
+---
+
+## 6. 关键参考
+
+| 资源 | URL |
+|------|-----|
+| Neovim 官方文档 | https://neovim.io/doc/ |
+| lazy.nvim 文档 | https://lazy.folke.io/ |
+| blink.cmp 文档 | https://cmp.saghen.dev/ |
+| mini.nvim 文档 | https://nvim-mini.org/mini.nvim/ |
+| Awesome Neovim | https://github.com/rockerBOO/awesome-neovim |
+

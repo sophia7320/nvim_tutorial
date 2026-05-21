@@ -86,6 +86,9 @@ nvim_study/
 │
 └── 11-appendix/                     ← 📚 附录
     └── README.md                    ← 生态地图、故障排查、参考资源汇总
+
+└── 12-cpp-workflow/                 ← 🔨 实战工作流
+    └── README.md                    ← C++/CMake/Git 全流程：LSP → 构建 → 调试 → 运行
 ```
 
 ---
@@ -139,6 +142,7 @@ brew install git ripgrep fd                             # macOS
 进阶：09-git         →  Git 工作流集成
 进阶：10-ai          →  AI 编码助手
 参考：11-appendix    →  随时查阅
+实战：12-cpp-workflow →  C++ 开发环境全流程集成
 ```
 
 ---
