@@ -4,7 +4,7 @@
 
 [![Neovim](https://img.shields.io/badge/Neovim-0.11%2B-%2357A143?logo=neovim&logoColor=white)](https://neovim.io/)
 [![Lua](https://img.shields.io/badge/Lua-5.1-%232C2D72?logo=lua&logoColor=white)](https://www.lua.org/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
