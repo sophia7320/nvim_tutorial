@@ -1,0 +1,6 @@
+# OpenCode / Sisyphus internal files
+.sisyphus/
+
+# OS
+.DS_Store
+Thumbs.db
