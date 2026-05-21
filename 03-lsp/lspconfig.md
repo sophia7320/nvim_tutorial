@@ -110,10 +110,20 @@ return {
       --      默认 handler 只需 vim.lsp.enable(server_name)
       --      也可以用此钩子做额外的服务器特定配置
       handlers = {
-        -- (11a) 默认 handler：所有没有专属 handler 的服务器走这里
-        function(server_name)
-          -- 什么都不用做 — automatic_enable 已处理激活
+        -- (11a) lua_ls 专用 handler：将 vim 标记为全局变量
+        --      这样 lua-language-server 就不会对 vim.* 报「未定义的全局变量」
+        --      automatic_enable = true 会自动调用 vim.lsp.enable()，只需配置即可
+        ["lua_ls"] = function()
+          vim.lsp.config("lua_ls", {
+            settings = {
+              Lua = {
+                diagnostics = { globals = { "vim" } },
+              },
+            },
+          })
         end,
+        -- (11b) 默认 handler：没有专属 handler 的服务器走这里
+        --      automatic_enable 已自动处理激活，无需额外操作
       },
     },
   },
