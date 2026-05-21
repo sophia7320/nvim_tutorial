@@ -4,7 +4,7 @@
 
 [![Neovim](https://img.shields.io/badge/Neovim-0.11%2B-%2357A143?logo=neovim&logoColor=white)](https://neovim.io/)
 [![Lua](https://img.shields.io/badge/Lua-5.1-%232C2D72?logo=lua&logoColor=white)](https://www.lua.org/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 
 ---
 
@@ -46,7 +46,7 @@ nvim_study/
 │
 ├── 01-core/                         ← 🔧 核心配置（Neovim 原生）
 │   ├── init-lua.md                  ← init.lua 入口、加载顺序、模块机制
-│   ├── options.md                   ← vim.opt 全局选项（LazyVim 风格）
+│   ├── options.md                   ← vim.opt 全局选项（LazyVim 风格，50 条逐句注解）
 │   ├── keymaps.md                   ← vim.keymap.set + 0.11 内置 LSP 默认键
 │   └── autocmds.md                  ← nvim_create_autocmd + LspAttach 最佳实践
 │
@@ -55,16 +55,20 @@ nvim_study/
 │   └── directory-structure.md       ← 标准目录结构 + 三种权威仓库分析
 │
 ├── 03-lsp/                          ← 🧠 语言服务器（最重要的章节）
-│   └── overview.md                  ← 架构全景 + Mason + Conform + nvim-lint + 0.11 原生 API
+│   ├── overview.md                  ← 架构全景 + 新旧范式对比
+│   ├── mason.md                     ← mason.nvim 安装器逐句解析
+│   ├── lspconfig.md                 ← vim.lsp.config() + vim.lsp.enable() 逐句解析
+│   └── formatting-linting.md        ← conform.nvim + nvim-lint 逐句配置
 │
 ├── 04-completion/                   ← ⌨️ 代码补全
-│   └── overview.md                  ← blink.cmp vs nvim-cmp 深度对比 + 选型建议
+│   ├── overview.md                  ← blink.cmp vs nvim-cmp 深度对比 + 选型建议
+│   └── blink-cmp.md                 ← blink.cmp 完整逐句解析（keymap/sources/fuzzy）
 │
 ├── 05-treesitter/                   ← 🌳 语法解析
-│   └── treesitter.md                ← 安装、高亮、文本对象、上下文、彩虹括号
+│   └── treesitter.md                ← 安装、高亮、文本对象、上下文
 │
 ├── 06-ui/                           ← 🎨 用户界面
-│   ├── colorscheme.md               ← Catppuccin / TokyoNight / Rose Pine 配置
+│   ├── colorscheme.md               ← Catppuccin / TokyoNight / Rose Pine 逐句配置
 │   ├── statusline.md                ← lualine + mini.statusline
 │   └── extras.md                    ← bufferline / dashboard / notify / indent-blankline
 │
@@ -73,20 +77,20 @@ nvim_study/
 │   ├── which-key.md                 ← which-key v3 按键提示 + v2→v3 迁移
 │   ├── flash.md                     ← flash.nvim 四种跳转模式
 │   ├── mini-nvim.md                 ← mini.nvim 40+ 模块套件
-│   └── file-explorer.md            ← neo-tree vs oil.nvim 文件管理
+│   └── file-explorer.md             ← neo-tree vs oil.nvim 文件管理
 │
 ├── 08-dap/                          ← 🐛 调试
-│   └── dap.md                       ← nvim-dap + dap-ui + Python/JS/Rust/Go 配置
+│   └── dap.md                       ← nvim-dap + Python/JS/Rust/Go 逐句配置
 │
 ├── 09-git/                          ← 🔀 版本控制
 │   └── gitsigns.md                  ← gitsigns + Neogit + diffview
 │
 ├── 10-ai/                           ← 🤖 AI 编码助手
-│   └── codecompanion.md             ← copilot.lua + CodeCompanion + avante 对比
+│   └── codecompanion.md             ← copilot.lua + CodeCompanion 逐句解析
 │
-└── 11-appendix/                     ← 📚 附录
-    └── README.md                    ← 生态地图、故障排查、参考资源汇总
-
+├── 11-appendix/                     ← 📚 附录
+│   └── README.md                    ← 生态地图、故障排查、参考资源汇总
+│
 └── 12-cpp-workflow/                 ← 🔨 实战工作流
     └── README.md                    ← C++/CMake/Git 全流程：LSP → 构建 → 调试 → 运行
 ```
