@@ -214,6 +214,7 @@ return {
       --     保存时才运行 lint，读取时不运行——节省 CPU，
       --     且不会在刚打开文件时弹出过时诊断
       vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        desc = "保存后自动运行 linter",
         -- (6) callback — 保存后执行的函数
         callback = function()
           -- (7) lint.try_lint() — 尝试对当前缓冲区运行所有已配置的 linter

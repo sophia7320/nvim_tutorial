@@ -174,6 +174,7 @@ return {
         lua = { "luacheck" },
       }
       vim.api.nvim_create_autocmd("BufWritePost", {
+        desc = "保存后自动运行 linter",
         callback = function() require("lint").try_lint() end,
       })
     end,

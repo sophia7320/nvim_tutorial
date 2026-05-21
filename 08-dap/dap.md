@@ -2,8 +2,6 @@
 
 > **TL;DR**: 不同语言的 DAP 适配器配置完全不同。逐句提供 Python（debugpy）、JS/TS（vscode-js-debug）、Rust（CodeLLDB）、Go（Delve）的完整配置。
 
-> **前置阅读**：nvim-dap 核心概念（adapter/configuration/UI）和基础快捷键，见当前目录旧版内容 / [08-dap/dap.md](dap.md)。
-
 ---
 
 ## 1. Python — debugpy

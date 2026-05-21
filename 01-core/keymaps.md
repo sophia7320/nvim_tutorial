@@ -107,7 +107,7 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>",
 ## 4. 缓冲区本地映射
 
 ```lua
--- 仅在当前缓冲区生效
+-- 仅在当前缓冲区生效（bufnr 由 LspAttach 回调中的 event.buf 提供）
 vim.keymap.set("n", "gd", vim.lsp.buf.definition,
   { buffer = bufnr, desc = "跳转到定义" })
 
