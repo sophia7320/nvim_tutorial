@@ -150,12 +150,10 @@ end, { desc = "搜索光标下的单词" })
 
 ```lua
 -- 默认行为是非递归（noremap），除非显式设置
-vim.keymap.set("n", "n", "'nzzzv'", { remap = true, desc = "查找下一个并居中" })
+vim.keymap.set("n", "n", "nzzzv", { desc = "查找下一个并居中" })
 ```
 
 ---
-
-## 6. 
 
 ## 6. 按键描述 (desc) 与 which-key 集成
 

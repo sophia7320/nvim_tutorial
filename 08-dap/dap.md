@@ -1,212 +1,173 @@
-# DAP — Neovim 调试器配置
+# nvim-dap 各语言调试适配器 — 逐行深度配置
 
-> **TL;DR**: nvim-dap 将 VS Code 的调试体验带入 Neovim。nvim-dap-ui 提供 IDE 级调试界面。通过 mason-nvim-dap 可自动安装调试适配器。
+> **TL;DR**: 不同语言的 DAP 适配器配置完全不同。逐句提供 Python（debugpy）、JS/TS（vscode-js-debug）、Rust（CodeLLDB）、Go（Delve）的完整配置。
 
----
-
-## 1. 核心插件生态
-
-| 插件 | 职责 |
-|------|------|
-| **nvim-dap** | DAP 客户端核心（调试器协议实现） |
-| **nvim-dap-ui** | 侧边栏调试界面（变量、堆栈、断点、REPL） |
-| **nvim-dap-virtual-text** | 代码行内变量值显示 |
-| **mason-nvim-dap** | 通过 Mason 安装调试适配器 |
+> **前置阅读**：nvim-dap 核心概念（adapter/configuration/UI）和基础快捷键，见当前目录旧版内容 / [08-dap/dap.md](dap.md)。
 
 ---
 
-## 2. 基础配置
+## 1. Python — debugpy
 
 ```lua
--- lua/plugins/dap.lua
-return {
-  -- 调试器核心
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "nvim-neotest/nvim-nio", -- 异步 I/O 库
-      -- Mason DAP（自动安装适配器）
-      {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = { "mason-org/mason.nvim" },
-        opts = {
-          ensure_installed = { "python", "codelldb" },
-        },
-      },
-    },
-    keys = {
-      { "<F5>", function() require("dap").continue() end, desc = "继续/启动调试" },
-      { "<F10>", function() require("dap").step_over() end, desc = "单步跳过" },
-      { "<F11>", function() require("dap").step_into() end, desc = "单步进入" },
-      { "<F12>", function() require("dap").step_out() end, desc = "单步跳出" },
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "切换断点" },
-      { "<leader>dB", function()
-          require("dap").set_breakpoint(vim.fn.input("断点条件: "))
-        end, desc = "条件断点" },
-      { "<leader>dr", function() require("dap").repl.open() end, desc = "打开 REPL" },
-      { "<leader>dl", function() require("dap").run_last() end, desc = "运行上次" },
-    },
-  },
+-- lua/config/dap/python.lua
 
-  -- 调试 UI 界面
-  {
-    "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-    keys = {
-      { "<leader>du", function() require("dapui").toggle() end, desc = "切换调试 UI" },
-    },
-    config = function()
-      local dap = require("dap")
-      local dapui = require("dapui")
-      dapui.setup()
+local dap = require("dap")  -- (1) 加载 nvim-dap
 
-      -- 调试开始时自动打开 UI
-      dap.listeners.before.attach.dapui_config = function() dapui.open() end
-      dap.listeners.before.launch.dapui_config = function() dapui.open() end
-      -- 调试结束时自动关闭 UI
-      dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
-      dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
-    end,
-  },
-
-  -- 内联变量值显示
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    opts = {
-      enabled = true,
-      highlight_changed_variables = true,
-      commented = false,
-    },
-  },
-}
-```
-
-> 来源：[nvim-dap README](https://github.com/mfussenegger/nvim-dap) | [nvim-dap-ui README](https://github.com/rcarriga/nvim-dap-ui)
-
----
-
-## 3. 各语言调试适配器配置
-
-### Python（debugpy）
-
-```lua
--- 使用 nvim-dap-python 扩展（推荐）
-{
-  "mfussenegger/nvim-dap-python",
-  config = function()
-    require("dap-python").setup("python3")
-  end,
-}
-```
-
-或手动配置：
-
-```lua
-local dap = require("dap")
+-- ─── 适配器：告诉 nvim-dap 如何启动 debugpy ──────────
 dap.adapters.python = {
-  type = "executable",
-  command = "python3",
-  args = { "-m", "debugpy.adapter" },
+  type = "executable",              -- (2) 启动子进程，通过 stdio 通信
+  command = "python3",              -- (3) Python 解释器路径
+  args = { "-m", "debugpy.adapter" }, -- (4) 以模块方式运行 debugpy 适配器
+  -- 等价于 shell: python3 -m debugpy.adapter
 }
+
+-- ─── 配置：告诉 debugpy 如何运行你的代码 ──────────────
 dap.configurations.python = {
   {
-    type = "python",
-    request = "launch",
-    name = "Launch file",
-    program = "${file}",
+    type = "python",                -- (5) 必须匹配适配器键名
+    request = "launch",             -- (6) 启动新进程
+    name = "Launch file",           -- (7) 选择菜单显示名
+    program = "${file}",            -- (8) ${file} = 当前文件路径
+    console = "integratedTerminal", -- (9) 输出到 Neovim 终端
+    justMyCode = false,             -- (10) false: 可进入第三方库代码
+
+    -- (11) pythonPath — 动态选择 Python 解释器
+    pythonPath = function()
+      local cwd = vim.fn.getcwd()
+      if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+        return cwd .. "/venv/bin/python"    -- .venv/
+      elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+        return cwd .. "/.venv/bin/python"   -- ./venv/
+      end
+      return "python3"                      -- 系统默认
+    end,
   },
 }
 ```
 
-### JavaScript / TypeScript（vscode-js-debug）
+---
+
+## 2. JavaScript / TypeScript — vscode-js-debug
 
 ```lua
+-- lua/config/dap/javascript.lua
+
+local dap = require("dap")
+
+-- (12) 适配器：server 模式 — nvim-dap 先启动 node 服务器再 TCP 连接
 dap.adapters["pwa-node"] = {
   type = "server",
   host = "localhost",
-  port = "${port}",
+  port = "${port}",            -- (13) nvim-dap 自动分配端口
+
   executable = {
     command = "node",
     args = {
-      vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+      -- (14) Mason 安装的 js-debug DAP 服务器入口
+      vim.fn.stdpath("data")
+        .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
       "${port}",
     },
   },
 }
+
 dap.configurations.javascript = {
   {
-    name = "Launch file",
     type = "pwa-node",
     request = "launch",
+    name = "Launch file",
     program = "${file}",
     cwd = "${workspaceFolder}",
   },
+  -- (15) attach 模式：连接已运行进程
+  {
+    type = "pwa-node",
+    request = "attach",
+    name = "Attach to process",
+    port = 9229,               -- (16) Node.js 默认调试端口
+    restart = true,            -- (17) 断开后自动重连
+    sourceMaps = true,         -- (18) TS → JS source map
+    protocol = "inspector",    -- (19) V8 Inspector 协议
+  },
 }
+-- (20) TS/TSX 复用 JS 配置
+dap.configurations.typescript = dap.configurations.javascript
 ```
 
-### Rust（CodeLLDB）
+---
+
+## 3. Rust — CodeLLDB
 
 ```lua
+-- lua/config/dap/rust.lua
+
+local dap = require("dap")
+
 dap.adapters.codelldb = {
   type = "server",
   port = "${port}",
   executable = {
-    command = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/adapter/codelldb",
+    -- (21) Mason 安装的 codelldb 适配器
+    command = vim.fn.stdpath("data")
+      .. "/mason/packages/codelldb/extension/adapter/codelldb",
     args = { "--port", "${port}" },
   },
 }
+
 dap.configurations.rust = {
   {
-    name = "Launch",
     type = "codelldb",
     request = "launch",
+    name = "Launch",
+    -- (22) 手动指定编译产物路径 (target/debug/<name>)
     program = function()
-      return vim.fn.input("可执行文件路径: ", vim.fn.getcwd() .. "/target/debug/", "file")
+      return vim.fn.input(
+        "Path to executable: ",
+        vim.fn.getcwd() .. "/target/debug/",
+        "file"
+      )
     end,
     cwd = "${workspaceFolder}",
-    stopOnEntry = false,
+    stopOnEntry = false,       -- (23) 不在入口停下
   },
 }
 ```
 
-### Go（Delve）
+---
+
+## 4. Go — Delve
 
 ```lua
+-- lua/config/dap/go.lua
+
+local dap = require("dap")
+
 dap.adapters.delve = {
   type = "server",
   port = "${port}",
   executable = {
     command = "dlv",
+    -- (24) dlv dap 启动 DAP 服务器
     args = { "dap", "-l", "127.0.0.1:${port}" },
   },
 }
+
 dap.configurations.go = {
   {
     type = "delve",
-    name = "Debug",
     request = "launch",
+    name = "Debug file",
     program = "${file}",
   },
+  -- (25) 调试测试
+  {
+    type = "delve",
+    request = "launch",
+    name = "Debug test",
+    mode = "test",
+    program = "${workspaceFolder}",
+  },
 }
-```
-
----
-
-## 4. which-key 调试分组
-
-```lua
-local wk = require("which-key")
-wk.add({
-  { "<leader>d", group = "Debug / 调试" },
-  { "<leader>db", desc = "切换断点" },
-  { "<leader>dB", desc = "条件断点" },
-  { "<leader>dc", desc = "继续" },
-  { "<leader>dn", desc = "单步跳过" },
-  { "<leader>di", desc = "单步进入" },
-  { "<leader>do", desc = "单步跳出" },
-  { "<leader>dr", desc = "打开 REPL" },
-  { "<leader>du", desc = "切换调试 UI" },
-})
 ```
 
 ---
@@ -215,9 +176,6 @@ wk.add({
 
 | 资源 | URL |
 |------|-----|
-| nvim-dap | https://github.com/mfussenegger/nvim-dap |
-| nvim-dap 官方文档 | https://github.com/mfussenegger/nvim-dap/blob/master/doc/dap.txt |
-| nvim-dap-ui | https://github.com/rcarriga/nvim-dap-ui |
-| nvim-dap-virtual-text | https://github.com/theHamsta/nvim-dap-virtual-text |
-| mason-nvim-dap | https://github.com/jay-babu/mason-nvim-dap.nvim |
-| Debug Adapter 安装 Wiki | https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation |
+| nvim-dap 文档 | https://github.com/mfussenegger/nvim-dap/blob/master/doc/dap.txt |
+| Debug Adapter Wiki | https://codeberg.org/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation |
+| nvim-dap-python | https://github.com/mfussenegger/nvim-dap-python |
