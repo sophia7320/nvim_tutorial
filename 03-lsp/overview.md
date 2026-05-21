@@ -262,3 +262,10 @@ Neovim 0.11 起**自动创建**以下 LSP 映射，无需手动设置：
 | nvim-lint | https://github.com/mfussenegger/nvim-lint |
 | Neovim 0.11 新闻 | https://neovim.io/doc/user/news-0.11.html |
 | Native LSP guide | https://dotfiles.substack.com/p/native-lsp-in-neovim-012 |
+
+---
+
+> **📖 本目录其他详细文件**：
+> - [mason.md](mason.md) — Mason 安装器逐句注解（最小配置→高级配置）
+> - [lspconfig.md](lspconfig.md) — `vim.lsp.config()` + `vim.lsp.enable()` + `LspAttach` 逐句注解
+> - [formatting-linting.md](formatting-linting.md) — conform.nvim + nvim-lint 逐句注解
