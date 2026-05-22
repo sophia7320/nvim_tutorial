@@ -1,6 +1,6 @@
 # vim.api.nvim_create_autocmd — 自动命令
 
-> **TL;DR**: `nvim_create_autocmd()` 是 Neovim 推荐的自动命令 API。始终使用 `group` 参数分组，并用 `{ clear = true }` 防止重复定义。
+> **TL;DR**: `nvim_create_autocmd()` 是 Neovim 推荐的自动命令 API。**augroup 不是可选项**——它是 autocmd 正确性的硬性前提：防止重复注册、便于调试、保护性能。始终使用 `nvim_create_augroup({ clear = true })` + `group` 参数。
 
 ---
 
@@ -180,25 +180,176 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 ---
 
-## 4. 自动命令组 (augroup) 最佳实践
+## 4. 自动命令组 (augroup) — 深入理解
 
-### 为什么需要 augroup？
+### 4.1 什么是 augroup？
+
+augroup 是 Neovim 中 autocmd 的**组织单元**——你可以把它想象成 autocmd 的「命名空间」。每个 autocmd 要么属于一个命名的 group，要么属于全局默认的「无名组」。
+
+```text
+全局 autocmd 注册表
+├── (无名组)              ← 没有 group 参数的 autocmd 都在这里
+│   ├── BufWritePre *    (你的某个回调)
+│   ├── BufWritePre *    (插件的回调)
+│   └── ...
+├── my_highlight_yank    ← group = "my_highlight_yank"
+│   └── TextYankPost *
+├── my_last_location     ← group = "my_last_location"
+│   └── BufReadPost *
+└── ...
+```
+
+**augroup 的核心价值**：让你能**以组为单位**管理 autocmd——批量清除、按名称查找、防止冲突。
+
+> 来源：[Neovim autocmd 文档](https://neovim.io/doc/user/autocmd.html#autocmd-groups)
+
+---
+
+### 4.2 如果用 augroup 会怎样？（对比演示）
+
+下面的三个例子帮助你直观感受 augroup 的价值——从「完全不用」到「正确使用」的三级跳。
+
+#### ❌ 第一级：完全不用 group
 
 ```lua
--- ❌ 没有 group——re-source 文件时会重复创建！
+-- lua/config/autocmds.lua
 vim.api.nvim_create_autocmd("BufWritePre", {
-  callback = function() print("saving...") end,
-})
-
--- ✅ 有 group + clear = true——re-source 时自动清除旧定义
-local group = vim.api.nvim_create_augroup("my_group", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = group,
-  callback = function() print("saving...") end,
+  callback = function()
+    print("文件即将保存: " .. vim.fn.expand("%"))
+  end,
 })
 ```
 
-**`{ clear = true }` 的作用**：创建组时自动清除该组下所有已有的 autocmd。这意味着即使多次 `:source` 配置文件，也不会重复定义。
+**如果你只 source 一次这个文件，它是正常的。** 但 Neovim 配置开发中，你会频繁 `:luafile %` 或 `:source %` 来热重载代码来测试。每次 source，都会在全局无名组里**追加一个新的 autocmd**——旧的不会被清除！
+
+source 3 次后，全局注册表中的状态：
+
+```text
+(无名组)
+├── BufWritePre *  print("文件即将保存...")   ← 第 1 次 source
+├── BufWritePre *  print("文件即将保存...")   ← 第 2 次 source（重复！）
+└── BufWritePre *  print("文件即将保存...")   ← 第 3 次 source（重复！）
+```
+
+**后果**：每次保存文件，`print()` 被调用 **3 次**。对于轻量回调（如 `print`）只是啰嗦；对于重量回调（如格式化、LSP 操作），会**指数级消耗 CPU**，且你可能完全不知道问题出在哪——因为没有报错，只是越来越慢。
+
+```vim
+" 诊断命令：查看某个事件的 autocmd 注册了几次
+:autocmd BufWritePre
+```
+
+---
+
+#### ⚠️ 第二级：用了 group，但没用 `clear = true`
+
+```lua
+local group = vim.api.nvim_create_augroup("my_custom", {})  -- 注意：空的 {}，没用 clear
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  callback = function()
+    print("文件即将保存: " .. vim.fn.expand("%"))
+  end,
+})
+```
+
+source 3 次后的注册表：
+
+```text
+my_custom
+├── BufWritePre *  print("文件即将保存...")   ← 第 1 次 source
+├── BufWritePre *  print("文件即将保存...")   ← 第 2 次 source（仍然重复！）
+└── BufWritePre *  print("文件即将保存...")   ← 第 3 次 source（仍然重复！）
+```
+
+**区别**：现在这些重复的 autocmd 都被「装进了 `my_custom` 这个盒子里」，方便你手动清除：
+
+```lua
+-- 手动清除某个组下的所有 autocmd
+vim.api.nvim_del_augroup_by_name("my_custom")
+```
+
+但仍然没有解决「每次 source 都会重复创建」的问题。你需要**每次手动删除再 source**，开发体验很差。
+
+---
+
+#### ✅ 第三级：group + `clear = true`（推荐）
+
+```lua
+-- 关键：{ clear = true }
+local group = vim.api.nvim_create_augroup("my_custom", { clear = true })
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  callback = function()
+    print("文件即将保存: " .. vim.fn.expand("%"))
+  end,
+})
+```
+
+source 无论多少次，注册表始终保持：
+
+```text
+my_custom
+└── BufWritePre *  print("文件即将保存...")   ← 始终只有一个！
+```
+
+**`{ clear = true }` 的工作原理**：每次执行 `nvim_create_augroup("my_custom", { clear = true })` 时，Neovim 会先**删除该组下所有已有的 autocmd**，再创建（或复用）这个组。所以后续 `nvim_create_autocmd` 添加的是唯一的、全新的 autocmd。
+
+> ╔══════════════════════════════════════════╗
+> ║ `{ clear = true }` 是 Neovim 社区的      ║
+> ║ **硬共识**。LazyVim、kickstart.nvim、   ║
+> ║ NvChad 全部使用此模式。                  ║
+> ╚══════════════════════════════════════════╝
+
+---
+
+### 4.3 实战：本教程中的 augroup 辅助函数
+
+所有教程中的 autocmd 配置都遵循同一套约定——用一个辅助函数简化 `nvim_create_augroup` 调用：
+
+```lua
+-- 定义在 autocmds.lua 顶部
+local function augroup(name)
+  return vim.api.nvim_create_augroup("my_" .. name, { clear = true })
+end
+
+-- 使用示例
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = augroup("highlight_yank"),  -- 展开为 my_highlight_yank
+  desc = "复制时短暂高亮选区",
+  callback = function()
+    vim.highlight.on_yank { higroup = "IncSearch", timeout = 150 }
+  end,
+})
+```
+
+**命名约定**：
+- 前缀 `my_` 区分你的配置与插件——避免与插件定义的 augroup 冲突
+- 后缀描述功能——如 `highlight_yank`、`last_location`、`auto_create_dir`
+- 每个功能独占一个 augroup——方便按需禁用（`nvim_del_augroup_by_name("my_highlight_yank")`）
+
+---
+
+### 4.4 augroup 在配置架构中的地位
+
+| 基础设施 | 作用 | 无组织的后果 |
+|----------|------|:---|
+| `vim.opt` | 统一管理全局选项 | 散落的 `vim.o.xxx` 不可追溯 |
+| `vim.keymap.set()` | 统一管理按键映射 | 映射冲突无法定位 |
+| **`nvim_create_augroup`** | **统一管理自动命令** | **重复注册 / 性能退化 / 调试困难** |
+
+augroup 与 `vim.opt`、`vim.keymap` 并列，是 Neovim 配置的**三大核心组织机制**。它不是「可选的优化项」——它是 autocmd 正确性的**硬性前提**。
+
+---
+
+### 4.5 快速自查清单
+
+- [ ] 是否每个 `nvim_create_autocmd` 都有 `group` 参数？
+- [ ] `nvim_create_augroup` 是否使用了 `{ clear = true }`？
+- [ ] 不同功能的 autocmd 是否用了不同的 augroup 名称？
+- [ ] augroup 名称是否有统一的前缀（如 `my_`）以避免和插件冲突？
+- [ ] 开发时是否能用 `:autocmd <Event>` 快速验证没有重复注册？
 
 ---
 
