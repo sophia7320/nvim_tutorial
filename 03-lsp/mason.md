@@ -182,6 +182,9 @@ return {
 | `:MasonUninstall <package>` | 卸载工具 |
 | `:MasonUpdate` | 更新所有已安装工具 |
 | `:MasonLog` | 查看安装日志（排查安装失败） |
+| `:MasonToolsInstall` | 批量安装 ensure_installed 中声明的缺失工具 |
+| `:MasonToolsUpdate` | 更新 ensure_installed 中声明的所有工具 |
+| `:MasonToolsClean` | 卸载不在 ensure_installed 中的工具 |
 
 ---
 
@@ -211,19 +214,116 @@ mason.nvim 将所有工具安装在 Neovim 数据目录下：
 ```text
 mason.nvim (安装工具)
     │
+    ├──→ mason-tool-installer.nvim (自动确保 formatter/linter/DAP 等所有工具已安装)
+    │
     ├──→ mason-lspconfig.nvim (桥接：自动为 LSP 服务器生成 vim.lsp.enable() 调用)
     │
     ├──→ mason-nvim-dap.nvim  (桥接：自动配置 nvim-dap 适配器)
     │
-    └──→ conform.nvim / nvim-lint (直接调用 masonry 安装的 formatter/linter 命令)
+    └──→ conform.nvim / nvim-lint (直接调用 Mason 安装的 formatter/linter 命令)
 ```
 
 ---
 
-## 7. 关键参考
+## 7. mason-tool-installer.nvim — 自动安装所有 Mason 工具
+
+### 7.1 为什么需要它？
+
+`mason-lspconfig.nvim` 的 `ensure_installed` 只能自动安装 **LSP 服务器**。但你还需要 formatter（stylua、prettierd）、linter（eslint_d、luacheck）、DAP 适配器（debugpy、codelldb）等。
+
+`mason-tool-installer.nvim` 接管所有 Mason 工具的自动安装——无论类型。**换新机器后打开 Neovim，所有工具自动就位。**
+
+> ╔══════════════════════════════════════════════╗
+> ║ mason-lspconfig 的 ensure_installed 详见：     ║
+> ║ → lspconfig.md §2 组件 3                       ║
+> ╚══════════════════════════════════════════════╝
+
+### 7.2 最小配置（开箱即用）
+
+```lua
+-- lua/plugins/lsp.lua — mason-tool-installer 配置块
+return {
+  {
+    -- (1) 插件标识符
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+
+    -- (2) dependencies — 依赖 mason.nvim（必须先安装）
+    dependencies = { "mason-org/mason.nvim" },
+
+    -- (3) opts — 最小配置：只需声明你需要哪些工具
+    --     mason-tool-installer 会在 Neovim 启动时自动检查并安装缺失的工具
+    --     所有工具名与 Mason Registry 中的包名一致（:Mason 里看到的名称）
+    --     ⚠️ 这是你唯一需要关心的配置——告诉它你要什么，其余全自动
+    opts = {
+      ensure_installed = {
+        -- LSP 服务器
+        "lua-language-server",  -- Lua
+        "rust-analyzer",        -- Rust
+        "pyright",              -- Python
+        "clangd",               -- C/C++
+
+        -- Formatter
+        "stylua",               -- Lua 格式化
+        "prettierd",            -- JS/TS/CSS/HTML
+        "clang-format",         -- C/C++
+
+        -- Linter
+        "eslint_d",             -- JS/TS
+        "luacheck",             -- Lua
+        "clang-tidy",           -- C/C++
+
+        -- DAP 调试器
+        "debugpy",              -- Python
+        "codelldb",             -- C/C++/Rust
+      },
+    },
+  },
+}
+```
+
+> 💡 **提示**：使用 mason-tool-installer 后，`mason-lspconfig` 的 `ensure_installed` 可以移除——由前者统一管理所有工具。
+
+### 7.3 高级选项（按需开启）
+
+```lua
+-- (4) 完整配置——仅在默认行为不够时使用
+opts = {
+  -- (4a) ensure_installed — 要确保安装的工具列表（🟡 必需，无默认值）
+  ensure_installed = { "stylua", "eslint_d", ... },
+
+  -- (4b) auto_update = false — 启动时自动更新已安装工具
+  --      默认 false。开启后每次启动检查更新，略慢但省心
+  auto_update = false,
+
+  -- (4c) run_on_start = true — 启动时立即检查安装
+  --      默认 true。设为 false 则需要手动 :MasonToolsInstall
+  run_on_start = true,
+
+  -- (4d) start_delay = 3000 — 延迟启动检查（ms），默认 3000
+  --      调大可避免与其他启动插件抢占资源
+  start_delay = 3000,
+
+  -- (4e) debounce_hours = 24 — 自动更新间隔（小时）
+  --      配合 auto_update = true，每 24h 检查一次更新
+  debounce_hours = 24,
+}
+```
+
+| 选项 | 类型 | 默认值 | 必需？ | 说明 |
+|------|------|--------|:---:|------|
+| `ensure_installed` | `string[]` | `{}` | 🟡 **是** | 你要自动安装哪些工具 |
+| `auto_update` | `boolean` | `false` | 🟢 否 | 启动时自动更新 |
+| `run_on_start` | `boolean` | `true` | 🟢 否 | 启动时立即检查 |
+| `start_delay` | `number` | `3000` | 🟢 否 | 延迟启动检查（ms） |
+| `debounce_hours` | `number` | `24` | 🟢 否 | 自动更新最小间隔 |
+
+---
+
+## 8. 关键参考
 
 | 资源 | URL |
 |------|-----|
 | mason.nvim README | https://github.com/mason-org/mason.nvim |
 | mason.nvim 官方文档 | https://mason-org.github.io/mason.nvim/ |
+| mason-tool-installer.nvim | https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim |
 | Mason Registry（所有可用包） | https://mason-registry.dev/ |
