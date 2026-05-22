@@ -90,7 +90,13 @@ nvim_study/
 │   └── codecompanion.md             ← copilot.lua + CodeCompanion 逐句解析
 │
 ├── 11-appendix/                     ← 📚 附录
-│   └── README.md                    ← 生态地图、故障排查、参考资源汇总
+│   ├── README.md                    ← 生态地图、故障排查、参考资源汇总
+│   ├── lazy-nvim-spec.md            ← lazy.nvim Spec 全字段速查
+│   ├── lsp-config.md                ← vim.lsp.config / diagnostic.config 速查
+│   ├── conform-lint-cheatsheet.md   ← conform + nvim-lint 速查
+│   ├── blink-cmp-cheatsheet.md      ← blink.cmp 全配置键速查
+│   ├── mason-cheatsheet.md          ← Mason 命令 + 包名速查
+│   └── keymap-cheatsheet.md         ← 全教程默认键位速查
 │
 └── 12-cpp-workflow/                 ← 🔨 实战工作流
     └── README.md                    ← C++/CMake/Git 全流程：LSP → 构建 → 调试 → 运行

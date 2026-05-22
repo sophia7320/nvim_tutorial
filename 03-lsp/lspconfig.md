@@ -16,7 +16,7 @@ lspconfig.lua_ls.setup({                 -- .setup() 同时做配置 + 启动
 lspconfig.ts_ls.setup({})                -- 重复调用每个服务器
 
 -- ─── ✅ 新范式（0.11+）───
--- 优势：配置和激活分离；配置可持久化到 lsp/*.lua 文件
+-- 优势：配置和激活分离；配置可持久化到模块化的 Lua 文件（如 lua/config/lsp.lua）
 vim.lsp.config("lua_ls", {              -- 仅配置，不激活
   settings = { Lua = { ... } }
 })

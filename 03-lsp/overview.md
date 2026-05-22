@@ -90,8 +90,9 @@ Neovim 0.11+ 中，LSP 配置有严格的优先级顺序（从低到高）：
 ```
 
 这意味着：
-- 你可以在 `lsp/lua_ls.lua` 中放置持久化配置
-- 也可以在 `vim.lsp.config()` 中进行动态覆盖
+- `lsp/lua_ls.lua` 可放置声明式持久化配置（方式 2）
+- `vim.lsp.config()` 提供最高优先级的动态覆盖（方式 4）
+- **本教程统一使用 `vim.lsp.config()`（方式 4），配置放在 `lua/config/lsp.lua`**，详见 [lspconfig.md](lspconfig.md)
 
 ---
 
@@ -182,12 +183,11 @@ return {
 }
 ```
 
-**配合的 LSP 配置**：
+**配合的 LSP 配置**（详见 [lspconfig.md](lspconfig.md) §3）：
 
 ```lua
--- ~/.config/nvim/lsp/lua_ls.lua
----@type vim.lsp.Config
-return {
+-- ~/.config/nvim/lua/config/lsp.lua
+vim.lsp.config("lua_ls", {
   cmd = { "lua-language-server" },
   filetypes = { "lua" },
   root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
@@ -199,7 +199,7 @@ return {
       telemetry = { enable = false },
     },
   },
-}
+})
 ```
 
 ---

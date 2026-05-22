@@ -6,8 +6,8 @@ Neovim 补全教程（2 文件）—— blink.cmp（推荐）深度解析 + nvim
 ## STRUCTURE
 ```
 04-completion/
-├── overview.md     # blink.cmp vs nvim-cmp 深度对比 + 社区迁移分析 + 片段引擎选型（226 行）
-└── blink-cmp.md    # blink.cmp 完整逐句解析：keymap/sources/fuzzy/signature 全部参数（347 行）
+├── overview.md     # blink.cmp vs nvim-cmp 深度对比 + 社区迁移分析 + 片段引擎选型
+└── blink-cmp.md    # blink.cmp 完整逐句解析：keymap/sources/fuzzy/signature 全部参数
 ```
 
 ## WHERE TO LOOK
@@ -25,4 +25,3 @@ Neovim 补全教程（2 文件）—— blink.cmp（推荐）深度解析 + nvim
 ## CONVENTIONS (THIS DIR)
 - blink-cmp.md 使用逐句编号注解（与 03-lsp/ 文件风格一致）
 - overview.md 不包含详细配置——它是选型指南和对比分析
-- blink-cmp.md 中重复概念（如 event/opts 语义）用交叉引用框链接回 02-plugin-manager/
