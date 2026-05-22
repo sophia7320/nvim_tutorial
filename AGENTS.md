@@ -1,12 +1,12 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** Thu May 21 2026
-**Updated:** Thu May 21 2026 (post-init-deep)
+**Updated:** Thu May 22 2026 (post-init-deep + 11-appendix cheatsheets)
 **Commit:** 6ff5cab
 **Branch:** master
 
 ## OVERVIEW
-Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、35 个 .md 文件（含 6 个 AGENTS.md 元文件和 28 个内容文件）。纯文档（无代码），面向从零搭建 Neovim IDE 的中文开发者。2026-05 大幅扩展：新增 12-cpp-workflow/ 实战工作流、03-lsp/ 拆分为 4 个深度文件、04-completion/ 新增 blink-cmp.md 逐句解析、全线代码块增加编号逐句注解。
+Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、43 个 .md 文件（含 8 个 AGENTS.md 元文件和 35 个内容文件）。纯文档（无代码），面向从零搭建 Neovim IDE 的中文开发者。2026-05 大幅扩展：新增 12-cpp-workflow/ 实战工作流、03-lsp/ 拆分为 4 个深度文件、04-completion/ 新增 blink-cmp.md 逐句解析、全线代码块增加编号逐句注解。
 
 ## STRUCTURE
 ```
@@ -37,7 +37,14 @@ Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、35 个 .md 文件
 ├── 08-dap/                           # nvim-dap 调试（Python/JS/Rust/Go，1 文件）
 ├── 09-git/                           # gitsigns + Neogit + diffview（1 文件）
 ├── 10-ai/                            # AI 助手对比（1 文件）
-├── 11-appendix/                      # 生态地图、排错、参考资源（1 文件）
+├── 11-appendix/                      # 生态地图、排错、参考资源（7 文件）
+│   ├── README.md                    # 生态地图 + 排错速查 + 速查表索引
+│   ├── lazy-nvim-spec.md            # lazy.nvim Spec 全字段速查
+│   ├── lsp-config.md                # vim.lsp.config/diagnostic.config 速查
+│   ├── conform-lint-cheatsheet.md   # conform + nvim-lint 速查
+│   ├── blink-cmp-cheatsheet.md      # blink.cmp 全配置键速查
+│   ├── mason-cheatsheet.md          # Mason 命令 + 包名速查
+│   └── keymap-cheatsheet.md         # 全教程默认键位速查
 └── 12-cpp-workflow/                  # C++/CMake/Git 全流程实战（571 行，最大单文件）
 ```
 
@@ -59,7 +66,7 @@ Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、35 个 .md 文件
 - 编号 00-12 强制执行线性阅读顺序
 - **新增（2026-05）**：逐句注解格式——代码块中每条配置右侧 `-- (N) 解释` 编号+中文说明
 - **新增（2026-05）**：交叉引用框——重复概念用 `╔══╗` 框链接到首次详解的文件，不重复解析
-- 已扩展目录：03-lsp/（4 文件）、04-completion/（2 文件）、12-cpp-workflow/（全新）
+- 已扩展目录：03-lsp/（4 文件）、04-completion/（2 文件）、12-cpp-workflow/（全新）、11-appendix/（7 文件，含 6 个速查表）
 
 ## ANTI-PATTERNS (THIS PROJECT)
 - **禁止使用** `packer.nvim`、`vim-plug`、`lsp-installer`、`coc.nvim` — 全部过时
