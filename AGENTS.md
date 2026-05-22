@@ -6,7 +6,7 @@
 **Branch:** master
 
 ## OVERVIEW
-Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、43 个 .md 文件（含 8 个 AGENTS.md 元文件和 35 个内容文件）。纯文档（无代码），面向从零搭建 Neovim IDE 的中文开发者。2026-05 大幅扩展：新增 12-cpp-workflow/ 实战工作流、03-lsp/ 拆分为 4 个深度文件、04-completion/ 新增 blink-cmp.md 逐句解析、全线代码块增加编号逐句注解。
+Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、44 个 .md 文件（含 8 个 AGENTS.md 元文件和 36 个内容文件）。纯文档（无代码），面向从零搭建 Neovim IDE 的中文开发者。2026-05 大幅扩展：新增 12-cpp-workflow/ 实战工作流、03-lsp/ 拆分为 4 个深度文件、04-completion/ 新增 blink-cmp.md 逐句解析、02-plugin-manager/ 新增 overview.md 架构入口、全线代码块增加编号逐句注解。
 
 ## STRUCTURE
 ```
@@ -20,7 +20,8 @@ Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、43 个 .md 文件
 │   ├── options.md                    # vim.opt 全局选项（LazyVim 风格，50 条逐句注解）
 │   ├── keymaps.md                    # vim.keymap.set + 0.11 默认 LSP 键
 │   └── autocmds.md                   # nvim_create_autocmd + LspAttach
-├── 02-plugin-manager/                # lazy.nvim（2 内容文件）
+├── 02-plugin-manager/                # lazy.nvim（3 内容文件）
+│   ├── overview.md                   # 架构全景 + 核心概念 + 文件导航
 │   ├── lazy-nvim.md                  # Spec / 懒加载 / 版本控制 / 迁移指南
 │   └── directory-structure.md        # 标准目录结构 + 三种权威仓库分析
 ├── 03-lsp/                           # LSP 开发环境（4 内容文件，最重要）
@@ -66,7 +67,7 @@ Neovim 0.11+ 配置教程文档仓库 — 13 个分类目录、43 个 .md 文件
 - 编号 00-12 强制执行线性阅读顺序
 - **新增（2026-05）**：逐句注解格式——代码块中每条配置右侧 `-- (N) 解释` 编号+中文说明
 - **新增（2026-05）**：交叉引用框——重复概念用 `╔══╗` 框链接到首次详解的文件，不重复解析
-- 已扩展目录：03-lsp/（4 文件）、04-completion/（2 文件）、12-cpp-workflow/（全新）、11-appendix/（7 文件，含 6 个速查表）
+- 已扩展目录：02-plugin-manager/（3 文件）、03-lsp/（4 文件）、04-completion/（2 文件）、12-cpp-workflow/（全新）、11-appendix/（7 文件，含 6 个速查表）
 
 ## ANTI-PATTERNS (THIS PROJECT)
 - **禁止使用** `packer.nvim`、`vim-plug`、`lsp-installer`、`coc.nvim` — 全部过时
@@ -96,5 +97,5 @@ markdownlint '**/*.md' --ignore node_modules
 - 无 CI/CD（建议添加 markdown lint + link check）
 - 无代码格式化配置（`.editorconfig`、`.markdownlint.yaml`）
 - 00-overview/README.md 未遵循标准 TL;DR 格式和编号章节（已知例外但未在约定中显式记录）
-- 12-cpp-workflow/README.md 有两个 `## 1.` 标题（编号冲突待解决）
+- 12-cpp-workflow/README.md 章节编号已统一为 `## 1.`-`## 12.`（原有两个 `## 1.` 标题和无编号标题已修复）
 - 仓库根无真正的 `.lua`/`.json` 配置文件 — 所有代码嵌入在 markdown 代码块中

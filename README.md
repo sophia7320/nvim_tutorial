@@ -51,6 +51,7 @@ nvim_study/
 │   └── autocmds.md                  ← nvim_create_autocmd + LspAttach 最佳实践
 │
 ├── 02-plugin-manager/               ← 📦 lazy.nvim
+│   ├── overview.md                  ← 架构全景 + 核心概念 + 文件导航
 │   ├── lazy-nvim.md                 ← 安装、Spec 全参、懒加载、版本控制、迁移指南
 │   └── directory-structure.md       ← 标准目录结构 + 三种权威仓库分析
 │
