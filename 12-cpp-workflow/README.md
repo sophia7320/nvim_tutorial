@@ -18,7 +18,7 @@
 
 ---
 
-## 系统依赖
+## 2. 系统依赖
 
 ```bash
 # Ubuntu/Debian
@@ -40,9 +40,9 @@ cmake --version                 # >= 3.16
 
 ---
 
-## 1. 理解 compile_commands.json
+## 3. 理解 compile_commands.json
 
-### 1.1 它是什么？
+### 3.1 它是什么？
 
 `compile_commands.json` 是一份 **JSON 编译数据库**。它记录了项目中每个 `.cpp` 文件是如何编译的——包括编译器路径、include 路径、宏定义、编译选项。
 
@@ -55,7 +55,7 @@ cmake --version                 # >= 3.16
 }
 ```
 
-### 1.2 为什么 clangd 需要它？
+### 3.2 为什么 clangd 需要它？
 
 **clangd 本身不是一个编译器**——但你写的代码可能包含 `-DDEBUG` 宏、`-I` include 路径、`-std=c++20` 等编译选项。没有这些信息，clangd 不知道：
 
@@ -69,9 +69,9 @@ cmake --version                 # >= 3.16
 
 ---
 
-## 2. 配置 CMake 项目生成 compile_commands.json
+## 4. 配置 CMake 项目生成 compile_commands.json
 
-### 2.1 最小 CMakeLists.txt
+### 4.1 最小 CMakeLists.txt
 
 ```cmake
 # (1) cmake_minimum_required — 指定 CMake 最低版本
@@ -103,7 +103,7 @@ target_include_directories(myapp PRIVATE include)
 set(CMAKE_BUILD_TYPE Debug)     # Debug: -g -O0; Release: -O3; RelWithDebInfo: -g -O2
 ```
 
-### 2.2 配置并构建
+### 4.2 配置并构建
 
 ```bash
 # 在项目根目录执行
@@ -132,9 +132,9 @@ myproject/
 
 ---
 
-## 3. 配置 clangd LSP
+## 5. 配置 clangd LSP
 
-### 3.1 安装与基本配置
+### 5.1 安装与基本配置
 
 clangd 通过 Mason 安装（已在 [03-lsp/overview.md](../03-lsp/overview.md) 中配置 Mason）：
 
@@ -149,7 +149,7 @@ clangd 通过 Mason 安装（已在 [03-lsp/overview.md](../03-lsp/overview.md) 
 }
 ```
 
-### 3.2 clangd 自定义参数（逐行注解）
+### 5.2 clangd 自定义参数（逐行注解）
 
 ```lua
 -- lua/config/lsp.lua 中追加
@@ -197,7 +197,7 @@ vim.lsp.enable("clangd")
 
 > 来源：[nvim-lspconfig clangd 预设](https://github.com/neovim/nvim-lspconfig/blob/master/lsp/clangd.lua) | [LazyVim clangd extra](https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/plugins/extras/lang/clangd.lua)
 
-### 3.3 验证 LSP 是否正常
+### 5.3 验证 LSP 是否正常
 
 ```bash
 # 打开一个 cpp 文件后执行
@@ -209,9 +209,9 @@ vim.lsp.enable("clangd")
 
 ---
 
-## 4. 代码格式化（clang-format）
+## 6. 代码格式化（clang-format）
 
-### 4.1 配置 conform.nvim
+### 6.1 配置 conform.nvim
 
 ```lua
 -- lua/plugins/lsp.lua 中 conform 的 formatters_by_ft 追加
@@ -227,7 +227,7 @@ formatters_by_ft = {
 },
 ```
 
-### 4.2 创建 .clang-format 配置文件
+### 6.2 创建 .clang-format 配置文件
 
 在项目根目录放置 `.clang-format`：
 
@@ -245,9 +245,9 @@ AccessModifierOffset: -4     # (17) public/private 缩进偏移
 
 ---
 
-## 5. 静态分析（clang-tidy）
+## 7. 静态分析（clang-tidy）
 
-### 5.1 配置 nvim-lint
+### 7.1 配置 nvim-lint
 
 ```lua
 -- lua/plugins/lsp.lua 中 nvim-lint 的 linters_by_ft 追加
@@ -262,7 +262,7 @@ lint.linters_by_ft = {
 }
 ```
 
-### 5.2 创建 .clang-tidy 配置文件
+### 7.2 创建 .clang-tidy 配置文件
 
 ```yaml
 # .clang-tidy — clang-tidy 静态分析规则
@@ -284,9 +284,9 @@ Checks: >
 
 ---
 
-## 6. 从 Neovim 中构建项目
+## 8. 从 Neovim 中构建项目
 
-### 6.1 使用 Toggleterm（最简单）
+### 8.1 使用 Toggleterm（最简单）
 
 ```lua
 -- lua/plugins/editor.lua
@@ -309,7 +309,7 @@ Checks: >
 -- cmake --build build -j$(nproc) && ./build/myapp
 ```
 
-### 6.2 使用 cmake-tools.nvim（更集成）
+### 8.2 使用 cmake-tools.nvim（更集成）
 
 ```lua
 -- lua/plugins/lang/cpp.lua — C++ 专用插件
@@ -341,7 +341,7 @@ Checks: >
 
 > 来源：[cmake-tools.nvim 文档](https://github.com/Civitasv/cmake-tools.nvim)
 
-### 6.3 备选方案：overseer.nvim（任务运行器）
+### 8.3 备选方案：overseer.nvim（任务运行器）
 
 `overseer.nvim` 是一个通用任务运行器。cmake-tools 可以配置为使用 overseer 作为 executor/runner：
 
@@ -355,13 +355,13 @@ opts = {
 
 overseer 的优势：可以定义任意构建任务模板（不限于 CMake），支持 `.vscode/tasks.json`、`preLaunchTask`（调试前自动构建）。
 
-### 6.4 CMake LSP（编辑 CMakeLists.txt 时的智能补全）
+### 8.4 CMake LSP（编辑 CMakeLists.txt 时的智能补全）
 
 **neocmakelsp** 是 2025+ 年推荐的 CMake 专用 LSP（Rust + Tree-sitter），替代已废弃的 `cmake-language-server`：
 
 ```lua
 -- lua/config/lsp.lua 中追加
--- (28) neocmakelsp — 为 CMakeLists.txt 提供补全、格式化、lint
+-- (21) neocmakelsp — 为 CMakeLists.txt 提供补全、格式化、lint
 --      需要系统安装：cargo install neocmakelsp（或通过 Mason）
 vim.lsp.config("neocmake", {
   cmd = { "neocmakelsp", "stdio" },      -- stdio 通信模式
@@ -381,20 +381,20 @@ vim.lsp.enable("neocmake")
 
 ---
 
-## 7. 调试 C++ 程序（Codelldb）
+## 9. 调试 C++ 程序（Codelldb）
 
-### 7.1 配置 nvim-dap
+### 9.1 配置 nvim-dap
 
 ```lua
 -- lua/config/dap/cpp.lua — C++ 调试器配置
 local dap = require("dap")
 
--- (21) 适配器：CodeLLDB — 基于 LLDB 的 C/C++/Rust 调试器
+-- (22) 适配器：CodeLLDB — 基于 LLDB 的 C/C++/Rust 调试器
 dap.adapters.codelldb = {
   type = "server",                -- 以 TCP 服务器模式运行
   port = "${port}",               -- nvim-dap 自动分配端口
   executable = {
-    -- (22) Mason 安装的 codelldb 适配器入口
+    -- (23) Mason 安装的 codelldb 适配器入口
     --      如果用系统包管理器安装，路径可能为 /usr/bin/codelldb
     command = vim.fn.stdpath("data")
       .. "/mason/packages/codelldb/extension/adapter/codelldb",
@@ -402,7 +402,7 @@ dap.adapters.codelldb = {
   },
 }
 
--- (23) 为 C 和 C++ 文件类型配置相同的调试行为
+-- (24) 为 C 和 C++ 文件类型配置相同的调试行为
 for _, lang in ipairs({ "c", "cpp" }) do
   dap.configurations[lang] = {
     {
@@ -410,7 +410,7 @@ for _, lang in ipairs({ "c", "cpp" }) do
       request = "launch",
       name = "Launch file",
 
-      -- (24) program — 被调试的可执行文件
+      -- (25) program — 被调试的可执行文件
       --      ${workspaceFolder} = 项目根目录
       --      假设编译产物在 build/ 下，文件名与项目名一致
       --      也可以用 vim.fn.input() 手动指定
@@ -422,13 +422,13 @@ for _, lang in ipairs({ "c", "cpp" }) do
         )
       end,
       cwd = "${workspaceFolder}",
-      stopOnEntry = false,       -- (25) 不在 main() 第一条停下
+      stopOnEntry = false,       -- (26) 不在 main() 第一条停下
 
-      -- (26) args — 传给被调试程序的命令行参数（可选）
+      -- (27) args — 传给被调试程序的命令行参数（可选）
       -- args = { "--verbose", "--config=dev.json" },
     },
     {
-      -- (27) attach 模式：连接到已运行的进程
+      -- (28) attach 模式：连接到已运行的进程
       type = "codelldb",
       request = "attach",
       name = "Attach to process",
@@ -439,7 +439,7 @@ for _, lang in ipairs({ "c", "cpp" }) do
 end
 ```
 
-### 7.2 Debug 模式编译
+### 9.2 Debug 模式编译
 
 ```bash
 # 必须使用 Debug 或 RelWithDebInfo 构建类型，否则无调试符号
@@ -455,7 +455,7 @@ cmake --build build -j$(nproc)
 | `RelWithDebInfo` | `-O2 -g` | ✅ 完整 | 性能敏感场景的调试 |
 | `Release` | `-O3` | ❌ 无 | 生产发布，不可调试 |
 
-### 7.3 调试操作速查
+### 9.3 调试操作速查
 
 | 按键 | 操作 | 说明 |
 |------|------|------|
@@ -474,7 +474,7 @@ cmake --build build -j$(nproc)
 
 ---
 
-## 8. 日常开发闭环
+## 10. 日常开发闭环
 
 配置完成后，你的日常 C++ 开发循环：
 
@@ -511,7 +511,7 @@ cmake --build build -j$(nproc)
 
 ---
 
-## 9. 常见问题排查
+## 11. 常见问题排查
 
 ### clangd 找不到头文件
 
@@ -557,7 +557,7 @@ sudo apt install codelldb
 
 ---
 
-## 10. 关键参考
+## 12. 关键参考
 
 | 资源 | URL |
 |------|-----|

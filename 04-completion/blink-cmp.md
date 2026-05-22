@@ -302,8 +302,9 @@ local capabilities = require("blink.cmp").get_lsp_capabilities({
       },
     },
   },
-}, -- (3) 第二个参数：是否合并默认 capabilities（默认 true）
-   --     设为 false 只返回你指定的 capabilities，不合并 blink 的默认值
+}, -- (3) 第二个参数 (include_nvim_defaults)：是否包含 Neovim 内置 LSP capabilities
+   --     true 时函数先以 vim.lsp.protocol.make_client_capabilities() 为基底再叠加 blink 的扩展能力
+   --     默认值取决于 blink.cmp 版本，显式传 true 确保行为一致
    true)
 
 -- (4) 将 capabilities 传给所有 LSP 服务器的默认配置
