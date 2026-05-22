@@ -18,6 +18,19 @@
 
 ## 2. 逐行注解：conform.nvim 完整配置
 
+> 💡 **设计原则**：只需告诉 conform 每种文件类型用哪个 formatter——其余全部默认即可。`format_on_save` 是最常用的高级选项，按需开启。
+
+### 配置速览
+
+| 配置项 | 类型 | 默认值 | 必需？ | 一句话说明 |
+|--------|------|--------|:---:|-----------|
+| `formatters_by_ft` | `table` | `{}` | 🟡 **是** | 按文件类型指定 formatter：`lua = { "stylua" }` |
+| `format_on_save` | `boolean\|table` | `false` | 🟢 否 | 保存时自动格式化；可设为 `{ timeout_ms = 500 }` |
+| `formatters` | `table` | `{}` | 🟢 否 | 自定义特定 formatter 的参数 |
+| `default_format_opts` | `table` | `{}` | 🟢 否 | 传给所有 formatter 的默认选项 |
+
+> ⚠️ **你真正必须做的**：声明 `formatters_by_ft`。其余都是按需配置。
+
 ```lua
 -- ============================================================================
 -- lua/plugins/lsp.lua — conform.nvim 格式化器
@@ -163,6 +176,17 @@ return {
 ---
 
 ## 4. 逐行注解：nvim-lint 代码检查配置
+
+> 💡 **设计原则**：声明每种文件类型用什么 linter，再配一个保存后自动触发的 autocmd——两件事搞定。
+
+### 配置速览
+
+| 配置项 | 类型 | 默认值 | 必需？ | 一句话说明 |
+|--------|------|--------|:---:|-----------|
+| `linters_by_ft` | `table` | `{}` | 🟡 **是** | 按文件类型指定 linter：`python = { "ruff" }` |
+| 自动触发 autocmd | — | — | 🟡 **是** | 需要手动创建 `BufWritePost` autocmd 调用 `lint.try_lint()` |
+
+> ⚠️ **注意**：nvim-lint 不使用 `opts` 自动调用 `setup()`。你需要 `config = function()` 手动设置 `linters_by_ft` 并注册 autocmd。
 
 ```lua
 -- ============================================================================

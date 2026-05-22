@@ -31,6 +31,24 @@ Render (如何展示？)
 
 ## 2. 逐行注解：blink.cmp 完整配置
 
+> 💡 **设计原则**：blink.cmp 的默认值已经非常合理。以下除 `"saghen/blink.cmp"` 插件声明本身外，**所有配置都是可选的**——只改你有明确需求的部分。
+
+### 配置速览
+
+| 配置块 | 默认值 | 必需？ | 一句话说明 |
+|--------|--------|:---:|-----------|
+| `version` | 无（最新） | 🟢 否 | 锁定 `"1.*"` 避免 V2 breaking changes |
+| `dependencies` | 无 | 🟢 否 | 加 `friendly-snippets` 即可使用内置片段 |
+| `keymap.preset` | `"default"` | 🟢 否 | 推荐 `"enter"`：回车接受，Tab 跳片段 |
+| `appearance` | 图标默认 `"none"` | 🟢 否 | 设 `nerd_font_variant = "mono"` 启用图标 |
+| `completion` | 文档/括号/幽灵文本全关 | 🟢 否 | 可按需开启 `auto_show`/`auto_brackets`/`ghost_text` |
+| `sources.default` | `{ "lsp", "path", "snippets", "buffer" }` | 🟢 否 | 四个内置源已覆盖 99% 场景 |
+| `fuzzy` | Rust 后端 + frecency 全开 | 🟢 否 | 默认已是最优配置 |
+| `signature` | `false` | 🟢 否 | 实验性功能，需要时开启 |
+| `opts_extend` | 无 | 🟢 否 | 允许其他文件向 `sources.default` 追加新源 |
+
+> ⚠️ **你真正必须做的只有两件事**：① 声明 `"saghen/blink.cmp"` 插件；② 选择 `keymap.preset`（或用默认 `<C-y>` 接受）。其余一切皆可选。
+
 ```lua
 -- ============================================================================
 -- lua/plugins/completion.lua — blink.cmp 完整补全配置

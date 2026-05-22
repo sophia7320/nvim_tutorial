@@ -72,6 +72,12 @@ return {
   -- ═══════════════════════════════════════════════════════════════
   -- 组件 3：mason-lspconfig.nvim — 桥接层
   -- ═══════════════════════════════════════════════════════════════
+  --
+  -- 💡 设计原则：
+  --   ensure_installed — 🟡 你唯一需要关心的：告诉它你要哪些 LSP 服务器
+  --   automatic_enable — 🟢 默认 true 自动激活，无需操作
+  --   handlers        — 🟢 留空即可，有特殊需求（如标记 vim 为全局）时才加
+  --
   {
     -- (7) mason-lspconfig 的职责：建立 "mason 中的包名" ↔ "LSP 服务器名" 的映射
     --     例如：mason 中的 "lua-language-server" → LSP 中的 "lua_ls"
@@ -129,6 +135,16 @@ return {
   },
 }
 ```
+
+### mason-lspconfig 配置一览
+
+| 选项 | 类型 | 默认值 | 必需？ | 说明 |
+|------|------|--------|:---:|------|
+| `ensure_installed` | `string[]` | `{}` | 🟡 **是** | 要自动安装的 LSP 服务器名（非 Mason 包名） |
+| `automatic_enable` | `boolean\|table` | `true` | 🟢 否 | 自动调用 `vim.lsp.enable()`；可排除特定服务器 |
+| `handlers` | `table` | `{}` | 🟢 否 | 服务器专属回调；不设则自动激活即可 |
+
+> 💡 **提示**：如果你使用了 `mason-tool-installer.nvim`（见 [mason.md §7](mason.md)），可以用它统一管理所有 Mason 工具，此时 mason-lspconfig 的 `ensure_installed` 可以移除。
 
 ---
 
