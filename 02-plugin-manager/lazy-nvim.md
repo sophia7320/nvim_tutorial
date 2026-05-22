@@ -273,7 +273,7 @@ return {
 ```lua
 -- 编辑增强：UI 渲染完成后
 { "folke/which-key.nvim", event = "VeryLazy" }
-{ "echasnovski/mini.nvim", event = "VeryLazy" }
+{ "nvim-mini/mini.nvim", event = "VeryLazy" }
 { "stevearc/dressing.nvim", event = "VeryLazy" }
 
 -- 文件操作：在打开文件时
