@@ -2,6 +2,21 @@
 
 ---
 
+## 📋 插件配置速查表
+
+> 已熟悉教程的读者可直接查阅以下精炼速查表，无需在正文中翻找。
+
+| 速查表 | 文件 | 内容 |
+|--------|------|------|
+| lazy.nvim Spec | [lazy-nvim-spec.md](lazy-nvim-spec.md) | Spec 全字段 / 加载控制 / 版本 / 命令 |
+| LSP + Diagnostic 配置 | [lsp-config.md](lsp-config.md) | `vim.lsp.config()` / `vim.diagnostic.config()` / LSP 函数 |
+| conform + nvim-lint | [conform-lint-cheatsheet.md](conform-lint-cheatsheet.md) | formatter/linter 声明 / 安装 / 配置 |
+| blink.cmp | [blink-cmp-cheatsheet.md](blink-cmp-cheatsheet.md) | keymap / sources / fuzzy / completion 全键 |
+| Mason | [mason-cheatsheet.md](mason-cheatsheet.md) | 命令 / 包名 / tool-installer 配置 |
+| 默认键位 | [keymap-cheatsheet.md](keymap-cheatsheet.md) | 全局 + 所有插件的快捷键汇总 |
+
+---
+
 ## 1. Neovim 插件生态地图 (2025-2026)
 
 ```
