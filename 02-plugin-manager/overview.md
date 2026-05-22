@@ -54,7 +54,7 @@
 | **`lazy-lock.json`** | 记录所有插件的精确 commit SHA。跨机器 `:Lazy restore` 恢复相同版本 | [lazy-nvim.md §7](lazy-nvim.md) |
 | **`import` 自动发现** | `import = "plugins"` 自动扫描 `lua/plugins/` 下所有 `.lua` 文件 | [lazy-nvim.md §4](lazy-nvim.md) |
 | **`opts` 自动 setup** | 设置 `opts` 后 lazy.nvim 自动推断模块名并调用 `require("plugin").setup(opts)` | [lazy-nvim.md §3.3](lazy-nvim.md) |
-| **目录结构** | `lua/config/`（核心设置）vs `lua/plugins/`（插件声明）vs `lsp/`（0.11+ 原生 LSP 配置） | [directory-structure.md](directory-structure.md) |
+| **目录结构** | `lua/config/`（核心设置 + LSP 配置）vs `lua/plugins/`（插件声明） | [directory-structure.md](directory-structure.md) |
 
 ---
 

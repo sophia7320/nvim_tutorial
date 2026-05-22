@@ -1,6 +1,6 @@
 # 推荐目录结构
 
-> **TL;DR**: 现代化 Neovim 配置采用「配置与插件分离」的模块化结构。核心设置放在 `lua/config/`，插件描述放在 `lua/plugins/`，LSP 配置放在 `lsp/`。
+> **TL;DR**: 现代化 Neovim 配置采用「配置与插件分离」的模块化结构。核心设置和 LSP 配置放在 `lua/config/`，插件描述放在 `lua/plugins/`。
 
 ---
 
@@ -17,7 +17,8 @@
 │   │   ├── options.lua           #   vim.opt 全局选项
 │   │   ├── keymaps.lua           #   vim.keymap.set 按键映射
 │   │   ├── autocmds.lua          #   vim.api.nvim_create_autocmd
-│   │   └── lazy.lua              #   lazy.nvim 引导
+│   │   ├── lsp.lua                #   LSP 服务器配置 + vim.diagnostic.config()
+│   │   └── lazy.lua               #   lazy.nvim 引导
 │   │
 │   └── plugins/                  # 插件描述（lazy.nvim 自动导入）
 │       ├── ui.lua                #   主题、状态栏、标签栏、dashboard
@@ -35,11 +36,6 @@
 │           ├── rust.lua
 │           ├── typescript.lua
 │           └── ...
-│
-├── lsp/                          # LSP 服务器配置（Neovim 0.11+ 原生目录）
-│   ├── lua_ls.lua
-│   ├── ts_ls.lua
-│   └── clangd.lua
 │
 ├── snippets/                     # 自定义代码片段（可选）
 │   └── package.json
@@ -68,8 +64,8 @@
 | `lua/config/keymaps.lua` | 所有**非 LSP** 的全局按键 | `<leader>ff` → Telescope |
 | `lua/config/autocmds.lua` | 所有全局自动命令 | Yank 高亮、回到上次位置 |
 | `lua/config/lazy.lua` | lazy.nvim 引导 | 克隆 + `require("lazy").setup()` |
+| `lua/config/lsp.lua` | LSP 服务器特定配置 + 诊断显示 | `vim.lsp.config()` + `vim.diagnostic.config()` |
 | `lua/plugins/*.lua` | 插件声明与配置 | 返回 `LazySpec` 表 |
-| `lsp/*.lua` | LSP 服务器配置 | 返回 `vim.lsp.Config` 表 |
 | `after/ftplugin/` | 文件类型特定设置 | `vim.opt_local.tabstop = 4` |
 
 ---
@@ -92,18 +88,29 @@ lua/plugins/  → "安装和配置哪些插件"
 | 先加载 | 后加载（或懒加载） |
 | `vim.opt` / `vim.keymap` / `vim.api` | `lazy.nvim` 的 `LazySpec` 格式 |
 
-### 3.2 lsp/ 独立目录（Neovim 0.11+）
+### 3.2 LSP 配置归入 lua/config/（与 03-lsp 一致）
 
 ```text
-lsp/
-├── lua_ls.lua  → 返回 { cmd = ..., settings = ... }
-└── ts_ls.lua   → 返回 { cmd = ..., settings = ... }
+lua/config/
+├── options.lua     → vim.opt / vim.g 全局设置
+├── keymaps.lua     → 全局按键映射
+├── autocmds.lua    → 自动命令（含 LspAttach 回调）
+├── lsp.lua         → vim.lsp.config() / vim.diagnostic.config()
+└── lazy.lua        → lazy.nvim 引导
 ```
 
-**为什么不用 `lua/plugins/` 目录**：
-- `lsp/` 是 Neovim 0.11+ 的**原生约定**，Neovim 自动从此目录加载
-- 优先级：`lsp/` < `after/lsp/` < `vim.lsp.config()`
-- 可与 `nvim-lspconfig` 提供的默认配置合并
+**为什么 LSP 配置放在 `lua/config/lsp.lua` 而非独立 `lsp/` 目录**：
+
+| 方式 | 位置 | 优先级 | 本教程采用 |
+|------|------|--------|:---:|
+| `lsp/*.lua` 声明式文件 | `~/.config/nvim/lsp/` | Neovim 自动加载（最低优先级） | ❌ |
+| `vim.lsp.config()` 运行时调用 | `lua/config/lsp.lua` | **最高优先级**，允许动态配置 | ✅ |
+
+本教程选择 `vim.lsp.config()` 路线（见 [03-lsp/lspconfig.md](../03-lsp/lspconfig.md)），因为：
+- 配置和激活分离——`vim.lsp.config()` 仅配置，`vim.lsp.enable()` 统一激活
+- 允许在代码中使用条件逻辑（如根据 `vim.fn.executable()` 动态设置 cmd）
+- 与 `vim.diagnostic.config()`、LspAttach 回调放在同一文件中，逻辑内聚
+- Neovim 0.11 官方文档将 `vim.lsp.config()` 标记为推荐方式
 
 ---
 
@@ -171,7 +178,6 @@ lua/nvchad/
 |------|------|
 | `lua/config/*.lua` | 小写 + 下划线，如 `keymaps.lua` `lazy.lua` |
 | `lua/plugins/*.lua` | 功能描述，如 `ui.lua` `lsp.lua` `git.lua` |
-| `lsp/*.lua` | 与 LSP 服务器名一致（`:LspInfo` 中的名称） |
 | `after/ftplugin/*.lua` | 与 `:set ft?` 输出一致 |
 | `snippets/*.json` | VSCode 格式的片段文件 |
 
