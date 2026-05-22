@@ -66,7 +66,8 @@ nvim_study/
 │   └── blink-cmp.md                 ← blink.cmp 完整逐句解析（keymap/sources/fuzzy）
 │
 ├── 05-treesitter/                   ← 🌳 语法解析
-│   └── treesitter.md                ← 安装、高亮、文本对象、上下文
+│   ├── treesitter.md                ← master 分支（0.11 稳定）逐句配置
+│   └── treesitter-main.md           ← main 分支（0.12+ nightly）原生 API 配置
 │
 ├── 06-ui/                           ← 🎨 用户界面
 │   ├── colorscheme.md               ← Catppuccin / TokyoNight / Rose Pine 逐句配置

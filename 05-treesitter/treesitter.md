@@ -13,6 +13,8 @@
 
 > 本文以 `master` 分支为准（Neovim 0.11）。
 
+> 💡 **使用 Neovim 0.12+ nightly？** `main` 分支有完全不同的配置方式（原生 API），详见 [treesitter-main.md](treesitter-main.md)。
+
 ---
 
 ## 2. 逐行注解：核心配置
