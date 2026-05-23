@@ -39,12 +39,12 @@ return {
     opts = {
       -- (5) flavour = "mocha" — 选择口味
       --      latte（亮色）/ frappe（中亮）/ macchiato（中暗）/ mocha（暗色）
-      flavour = "mocha",
+      flavour = "mocha",          -- [默认值，可选]
 
       -- (6) transparent_background = false — 背景是否透明
       --      false：使用主题的纯色背景（推荐，对比度好）
       --      true：背景透明，继承终端颜色，配合终端透明度可实现毛玻璃
-      transparent_background = false,
+      transparent_background = false,  -- [默认值，可选]
 
       -- (7) highlight_overrides — 自定义高亮组颜色
       --     键 = 口味名，值 = 函数，参数 colors 是主题调色板
@@ -97,8 +97,8 @@ return {
   lazy = false,
   priority = 1000,
   opts = {
-    style = "storm",          -- (10) storm | moon | night | day
-    transparent = false,      -- (11) 关闭透明背景
+    style = "storm",          -- (10) storm | moon | night | day [默认值，可选]
+    transparent = false,      -- (11) 关闭透明背景 [默认值，可选]
     styles = {
       sidebars = "dark",      -- (12) 侧边栏背景比主窗口更深
       floats = "dark",        -- (13) 浮动窗口也用深色背景
@@ -129,7 +129,7 @@ return {
     variant = "moon",        -- (15) main | moon | dawn
     dark_variant = "moon",   -- (16) 当系统为深色模式时使用的变体
     styles = {
-      transparency = false,  -- (17) 关闭透明
+      transparency = false,  -- (17) 关闭透明 [默认值，可选]
     },
   },
   config = function(_, opts)

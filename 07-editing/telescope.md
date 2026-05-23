@@ -41,10 +41,10 @@ return {
     opts = {
       defaults = {
         -- UI 配置
-        layout_strategy = "horizontal",
+        layout_strategy = "horizontal",  -- [默认值，可选]
         layout_config = { prompt_position = "top" },
         sorting_strategy = "ascending",
-        winblend = 0,
+        winblend = 0,                 -- [默认值，可选]
         -- 映射
         mappings = {
           i = {
@@ -71,10 +71,10 @@ return {
       },
       extensions = {
         fzf = {
-          fuzzy = true,
-          override_generic_sorter = true,
-          override_file_sorter = true,
-          case_mode = "smart_case",
+          fuzzy = true,                    -- [默认值，可选]
+          override_generic_sorter = true,  -- [默认值，可选]
+          override_file_sorter = true,     -- [默认值，可选]
+          case_mode = "smart_case",        -- [默认值，可选]
         },
       },
     },

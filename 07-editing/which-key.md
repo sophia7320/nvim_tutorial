@@ -15,7 +15,7 @@
     -- 预设主题（classic | modern | helix）
     preset = "modern",
     -- 延迟（ms），独立于 timeoutlen
-    delay = 300,
+    delay = 300,  -- [默认值，可选]
     -- 触发器
     triggers = {
       { "<auto>", mode = "nxsot" },

@@ -14,13 +14,13 @@
   opts = {
     -- 搜索模式配置
     search = {
-      multi_window = true, -- 跨窗口搜索
+      multi_window = true, -- 跨窗口搜索 [默认值，可选]
     },
     -- 标签样式
-    labels = "asdfghjklqwertyuiopzxcvbnm",
+    labels = "asdfghjklqwertyuiopzxcvbnm", -- [默认值，可选]
     -- 高亮组
     highlight = {
-      backdrop = false, -- 不显示背景模糊
+      backdrop = false, -- 不显示背景模糊 [默认值，可选]
     },
   },
   keys = {

@@ -32,36 +32,37 @@
   "nvim-mini/mini.nvim",
   event = "VeryLazy",
   config = function()
+    -- 以下各模块的配置均为 mini.nvim 默认值，仅作展示，可全部省略
     -- 自动配对
     require("mini.pairs").setup({
-      modes = { insert = true, command = false, terminal = false },
+      modes = { insert = true, command = false, terminal = false },  -- [默认值]
     })
 
     -- 包围操作（sa 添加, sd 删除, sr 替换）
     require("mini.surround").setup({
       mappings = {
-        add = "sa",
-        delete = "sd",
-        replace = "sr",
+        add = "sa",     -- [默认值]
+        delete = "sd",  -- [默认值]
+        replace = "sr", -- [默认值]
       },
     })
 
     -- 增强文本对象（支持 Treesitter 感知）
     require("mini.ai").setup({
-      n_lines = 500,
+      n_lines = 500,  -- [默认值，可选]
     })
 
     -- 注释（gcc 行注释, gc 可视化注释）
     require("mini.comment").setup({
       mappings = {
-        comment = "gc",
-        comment_line = "gcc",
+        comment = "gc",      -- [默认值]
+        comment_line = "gcc", -- [默认值]
       },
     })
 
     -- 缩进作用域
     require("mini.indentscope").setup({
-      draw = { delay = 100, animation = require("mini.indentscope").gen_animation.none() },
+      draw = { delay = 100, animation = require("mini.indentscope").gen_animation.none() },  -- [默认值]
     })
 
     -- 图标提供者（其他插件依赖）

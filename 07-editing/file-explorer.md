@@ -25,13 +25,13 @@
       filtered_items = {
         visible = true,
         hide_dotfiles = false,
-        hide_gitignored = true,
+        hide_gitignored = true,       -- [默认值，可选]
       },
       follow_current_file = { enabled = true },
       use_libuv_file_watcher = true,
     },
     window = {
-      position = "left",
+      position = "left",            -- [默认值，可选]
       width = 30,
       mappings = {
         ["Y"] = function(state)
@@ -68,8 +68,8 @@ oil.nvim 将文件系统操作变为 vim 原生编辑体验：
     { "-", "<cmd>Oil<CR>", desc = "打开文件管理器" },
   },
   opts = {
-    default_file_explorer = true,
-    columns = { "icon" },
+    default_file_explorer = true,   -- [默认值，可选]
+    columns = { "icon" },           -- [默认值，可选]
     view_options = { show_hidden = true },
     float = { max_width = 90, max_height = 40 },
     -- 文件操作后自动刷新

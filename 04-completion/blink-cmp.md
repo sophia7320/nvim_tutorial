@@ -124,7 +124,7 @@ return {
 
         -- (4d) documentation — 自动显示文档窗口
         documentation = {
-          -- (4e) auto_show = true — 选中候选项时自动弹出文档窗口
+          -- (4e) auto_show = true — 选中候选项时自动弹出文档窗口 [默认值，可选]
           auto_show = true,
 
           -- (4f) auto_show_delay_ms = 200 — 延迟 200ms 后弹出
@@ -138,8 +138,8 @@ return {
 
         -- (4g) accept — 接受补全项时的行为
         accept = {
-          -- (4h) auto_brackets — 自动添加括号
-          --      基于 LSP 的 semantic tokens 判断是否需要括号
+        -- (4h) auto_brackets — 自动添加括号 [默认值，可选]
+        --      基于 LSP 的 semantic tokens 判断是否需要括号
           --      例如：补全函数名 → 自动添加 ()
           --      实验性功能，需要 LSP 服务器支持 semantic tokens
           auto_brackets = { enabled = true },
@@ -166,7 +166,7 @@ return {
 
         -- (4n) trigger — 触发补全的条件
         trigger = {
-          -- (4o) show_in_snippet = true — 是否在 snippet 内部也显示补全
+          -- (4o) show_in_snippet = true — 是否在 snippet 内部也显示补全 [默认值，可选]
           --      false 可避免 snippet 内弹出补全菜单干扰 Tab 跳转
           --      只在使用 super-tab 预设时相关
           show_in_snippet = true,
