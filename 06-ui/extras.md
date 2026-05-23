@@ -18,7 +18,7 @@
   },
   opts = {
     options = {
-      mode = "buffers",          -- buffers | tabs
+      mode = "buffers",          -- buffers | tabs [默认值，可选]
       -- 偏移（为 neo-tree 等侧边栏留空）
       offsets = {
         {
@@ -46,15 +46,15 @@
       right_mouse_command = "bdelete! %d",
       left_mouse_command = "buffer %d",
       middle_mouse_command = nil,
-      indicator = { style = "icon", icon = "▎" },
+      indicator = { style = "icon", icon = "▎" },  -- [默认值，可选]
       buffer_close_icon = "󰅖",
       modified_icon = "●",
       close_icon = "",
       show_tab_indicators = true,
-      separator_style = "thin", -- thin | thick | slope | padded_slope
-      enforce_regular_tabs = false,
-      always_show_bufferline = true,
-      sort_by = "insert_at_end",
+      separator_style = "thin", -- thin | thick | slope | padded_slope [默认值，可选]
+      enforce_regular_tabs = false,   -- [默认值，可选]
+      always_show_bufferline = true,  -- [默认值，可选]
+      sort_by = "insert_at_end",      -- [默认值，可选]
     },
   },
 }
@@ -111,9 +111,9 @@
   "rcarriga/nvim-notify",
   event = "VeryLazy",
   opts = {
-    stages = "fade_in_slide_out",
+    stages = "fade_in_slide_out",   -- [默认值，可选]
     timeout = 3000,
-    background_colour = "#000000",
+    background_colour = "#000000",  -- [默认值，可选]
   },
   config = function(_, opts)
     local notify = require("notify")
@@ -133,12 +133,12 @@
   main = "ibl",
   event = "BufReadPre",
   opts = {
-    indent = { char = "│" },
+    indent = { char = "│" },       -- [默认值，可选]
     scope = {
-      enabled = true,
-      show_start = false,
-      show_end = false,
-      highlight = { "Function", "Label" },
+      enabled = true,                 -- [默认值，可选]
+      show_start = false,             -- [默认值，可选]
+      show_end = false,               -- [默认值，可选]
+      highlight = { "Function", "Label" },  -- [默认值，可选]
     },
     exclude = {
       filetypes = { "dashboard", "alpha", "help", "lazy" },

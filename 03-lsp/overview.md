@@ -142,7 +142,7 @@ return {
     },
     opts = {
       ensure_installed = { "lua_ls", "ts_ls", "rust_analyzer", "pyright" },
-      automatic_enable = true, -- 自动 vim.lsp.enable()
+      automatic_enable = true, -- 自动 vim.lsp.enable() [默认值，可选]
     },
   },
 
@@ -222,8 +222,8 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.HINT] = "󰌵 ",
     },
   },
-  underline = true,
-  update_in_insert = false,
+  underline = true,          -- [默认值，可选]
+  update_in_insert = false,  -- [默认值，可选]
   severity_sort = true,
   float = { border = "rounded", source = true },
 })

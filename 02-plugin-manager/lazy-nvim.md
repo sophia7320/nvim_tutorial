@@ -57,23 +57,23 @@ require("lazy").setup({
     { import = "plugins" }, -- 自动加载 lua/plugins/ 下所有 .lua 文件
   },
   defaults = {
-    lazy = true,            -- 默认启用懒加载
-    version = false,        -- 默认使用最新 commit（而非 Semver）
+    lazy = true,            -- [默认值，可选] 默认启用懒加载
+    version = false,        -- [默认值，可选] 默认使用最新 commit（而非 Semver）
   },
   install = {
     colorscheme = { "catppuccin" }, -- 安装期间使用的主题
   },
   checker = {
     enabled = true,         -- 自动检查更新
-    notify = false,         -- 不弹通知
+    notify = false,         -- [默认值，可选] 不弹通知
   },
   change_detection = {
     notify = false,
   },
   performance = {
-    cache = { enabled = true },
+    cache = { enabled = true },  -- [默认值，可选]
     rtp = {
-      reset = true,         -- 重置 runtime path
+      reset = true,         -- [默认值，可选] 重置 runtime path
       disabled_plugins = {  -- 禁用内置插件
         "gzip",
         "netrwPlugin",

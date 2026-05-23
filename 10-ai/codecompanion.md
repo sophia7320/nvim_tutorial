@@ -35,7 +35,7 @@ return {
 
     opts = {
       suggestion = {
-        enabled = true,
+        enabled = true,         -- [默认值，可选]
 
         -- (3) auto_trigger = false — 禁用自动触发
         --     按需手动请求建议，避免与 blink.cmp 的补全菜单冲突
@@ -50,10 +50,10 @@ return {
         },
       },
       panel = {
-        enabled = true,         -- (5) :Copilot panel 侧边栏浏览多个建议
+        enabled = true,         -- (5) :Copilot panel 侧边栏浏览多个建议 [默认值，可选]
       },
       -- (6) 指定 Node.js 路径（>= v22）
-      copilot_node_command = "node",
+      copilot_node_command = "node",  -- [默认值，可选]
     },
   },
 }
