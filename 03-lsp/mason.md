@@ -106,32 +106,33 @@ return {
         },
 
         -- (2c) keymaps — Mason UI 内的自定义快捷键
+        --     以下键位均为 Mason 默认值，可整块省略
         keymaps = {
           -- (2d) toggle_help = "?" — 按 ? 键切换帮助信息显示
           toggle_help = "?",
 
-          -- (2e) install_package = "i" — 光标移到某工具上按 i 安装
+          -- (2e) install_package = "i" — 光标移到某工具上按 i 安装 [默认值]
           install_package = "i",
 
-          -- (2f) update_package = "u" — 按 u 更新光标所在工具
+          -- (2f) update_package = "u" — 按 u 更新光标所在工具 [默认值]
           update_package = "u",
 
-          -- (2g) check_package_version = "c" — 按 c 检查新版本
+          -- (2g) check_package_version = "c" — 按 c 检查新版本 [默认值]
           check_package_version = "c",
 
-          -- (2h) update_all_packages = "U" — 按大U 更新全部工具
+          -- (2h) update_all_packages = "U" — 按大U 更新全部工具 [默认值]
           update_all_packages = "U",
 
-          -- (2i) check_outdated_packages = "C" — 按大C 检查所有过时工具
+          -- (2i) check_outdated_packages = "C" — 按大C 检查所有过时工具 [默认值]
           check_outdated_packages = "C",
 
-          -- (2j) uninstall_package = "X" — 按大X 卸载光标所在工具
+          -- (2j) uninstall_package = "X" — 按大X 卸载光标所在工具 [默认值]
           uninstall_package = "X",
 
-          -- (2k) cancel_installation = "<C-c>" — Ctrl+C 取消当前安装
+          -- (2k) cancel_installation = "<C-c>" — Ctrl+C 取消当前安装 [默认值]
           cancel_installation = "<C-c>",
 
-          -- (2l) apply_language_filter = "<C-f>" — Ctrl+F 按语言筛选
+          -- (2l) apply_language_filter = "<C-f>" — Ctrl+F 按语言筛选 [默认值]
           apply_language_filter = "<C-f>",
         },
       },

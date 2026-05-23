@@ -195,12 +195,12 @@ vim.diagnostic.config({
     --       可选，此处省略以保持简洁
   },
 
-  -- (3) underline — 在诊断位置显示下划线
+  -- (3) underline — 在诊断位置显示下划线 [默认值，可选]
   --     true：默认波浪线样式
   --     可设为 table 精确控制：{ severity = { min = WARN } } 仅警告及以上
   underline = true,
 
-  -- (4) update_in_insert — 插入模式下是否更新诊断
+  -- (4) update_in_insert — 插入模式下是否更新诊断 [默认值，可选]
   --     false（推荐）：插入模式不刷新诊断，避免性能下降和视觉干扰
   --     true：每次输入都刷新（可能导致卡顿）
   update_in_insert = false,

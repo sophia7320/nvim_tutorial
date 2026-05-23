@@ -110,7 +110,7 @@ return {
       -- 4.2 appearance — 外观配置
       -- ═══════════════════════════════════════════════════
       appearance = {
-        -- (4c) nerd_font_variant = "mono" — Nerd Font 图标变体
+        -- (4c) nerd_font_variant = "mono" — Nerd Font 图标变体 [默认值，可选]
         --      "mono" — 单色等宽图标（推荐，不影响字符对齐）
         --      "normal" — 标准 Nerd Font 图标
         --      "none" — 不使用图标（纯文本模式）
@@ -178,7 +178,7 @@ return {
       -- ═══════════════════════════════════════════════════
       sources = {
 
-        -- (4p) default — 默认激活的源（在所有文件类型中）
+        -- (4p) default — 默认激活的源（在所有文件类型中）[默认值，可选，不写就是这四个]
         default = { "lsp", "path", "snippets", "buffer" },
         -- 优先级从左到右下降：
         --   "lsp" — LSP 服务器提供的语义补全（最高质量）
@@ -240,12 +240,12 @@ return {
         --      Rust 实现约比 Lua 快 6 倍，且支持 SIMD 并行
         implementation = "prefer_rust",
 
-        -- (4y) frecency — 启用 frecency 记分（综合考虑选择频率和最近使用时间）
+        -- (4y) frecency — 启用 frecency 记分，经常选中的候选项会自动排到前面 [默认值，可选]
         --      enabled = true 表示启用，经常选中的候选项会自动排到前面
         --      path 指定 frecency 持久化数据文件路径（使用默认值即可）
         frecency = { enabled = true },
 
-        -- (4z) use_proximity = true — 启用 proximity 记分
+        -- (4z) use_proximity = true — 启用 proximity 记分 [默认值，可选]
         --      光标附近的单词获得加分，因为局部变量通常更相关
         use_proximity = true,
 

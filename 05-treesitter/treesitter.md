@@ -47,12 +47,12 @@ return {
         },
 
         auto_install = true,              -- (6) 自动安装缺失 parser
-        sync_install = false,             -- (7) 异步安装（不阻塞 UI）
+        sync_install = false,             -- (7) 异步安装（不阻塞 UI）[默认值，可选]
 
         -- ─── 高亮 ────────────────────────────
         highlight = {
           enable = true,                  -- (8a) 启用 Treesitter 高亮
-          additional_vim_regex_highlighting = false, -- (8b) 禁用旧式正则高亮
+          additional_vim_regex_highlighting = false, -- (8b) 禁用旧式正则高亮 [默认值，可选]
           -- 注：两套系统同时运行会导致颜色冲突和性能下降
         },
 

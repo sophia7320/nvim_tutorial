@@ -119,7 +119,7 @@ return {
 
       -- ─── 5.2 default_format_opts — 默认格式化选项 ─────
       default_format_opts = {
-        -- (5h) lsp_format = "fallback" — LSP 格式化的优先级
+        -- (5h) lsp_format = "fallback" — LSP 格式化的优先级 [默认值，可选]
         --      "never"：从不使用 LSP 格式化
         --      "fallback"：没有专用格式化器时，回退到 LSP formatting
         --      "prefer"：优先使用 LSP 格式化，没有时才用专用格式化器
@@ -133,7 +133,7 @@ return {
         --      注意：这是同步等待的时限（format_on_save 是同步执行的）
         timeout_ms = 500,
 
-        -- (5j) lsp_format = "fallback" — 保存时也用专用格式化器为主
+        -- (5j) lsp_format = "fallback" — 保存时也用专用格式化器为主 [默认值，可选]
         lsp_format = "fallback",
       },
 

@@ -129,13 +129,13 @@ return {
             ["@parameter.outer"] = "v",    -- 参数：字符级选择
           },
 
-          -- (13c) 是否包含包围空白
+          -- (13c) 是否包含包围空白 [默认值，可选]
           include_surrounding_whitespace = false,
         },
 
         -- ─── Move: 节点间跳转 ──────────────
         move = {
-          -- (13d) set_jumps — 记录跳转历史（可用 <C-o> 返回）
+          -- (13d) set_jumps — 记录跳转历史（可用 <C-o> 返回）[默认值，可选]
           set_jumps = true,
         },
 
@@ -206,16 +206,16 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter" },
 
     opts = {
-      -- (17a) enable — 功能开关
+      -- (17a) enable — 功能开关 [默认值，可选]
       enable = true,
 
       -- (17b) max_lines — 最多显示几行上下文
       max_lines = 3,
 
-      -- (17c) trim_scope — 只显示最外层函数/类名
+      -- (17c) trim_scope — 只显示最外层函数/类名 [默认值，可选]
       trim_scope = "outer",
 
-      -- (17d) mode — "cursor" 根据光标位置更新上下文
+      -- (17d) mode — "cursor" 根据光标位置更新上下文 [默认值，可选]
       mode = "cursor",
     },
   },
