@@ -26,7 +26,7 @@ dap.configurations.python = {
     request = "launch",             -- (6) 启动新进程
     name = "Launch file",           -- (7) 选择菜单显示名
     program = "${file}",            -- (8) ${file} = 当前文件路径
-    console = "integratedTerminal", -- (9) 输出到 Neovim 终端
+    console = "integratedTerminal", -- (9) 输出到 Neovim 终端 [默认值，可选]
     justMyCode = false,             -- (10) false: 可进入第三方库代码
 
     -- (11) pythonPath — 动态选择 Python 解释器
@@ -84,8 +84,8 @@ dap.configurations.javascript = {
     name = "Attach to process",
     port = 9229,               -- (16) Node.js 默认调试端口
     restart = true,            -- (17) 断开后自动重连
-    sourceMaps = true,         -- (18) TS → JS source map
-    protocol = "inspector",    -- (19) V8 Inspector 协议
+    sourceMaps = true,         -- (18) TS → JS source map [默认值，可选]
+    protocol = "inspector",    -- (19) V8 Inspector 协议 [默认值，可选]
   },
 }
 -- (20) TS/TSX 复用 JS 配置

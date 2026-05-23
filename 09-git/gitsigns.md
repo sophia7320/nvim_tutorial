@@ -15,10 +15,10 @@
     signs = {
       add = { text = "┃" },
       change = { text = "┃" },
-      delete = { text = "_" },
-      topdelete = { text = "‾" },
-      changedelete = { text = "~" },
-      untracked = { text = "┆" },
+      delete = { text = "_" },       -- [默认值，可选]
+      topdelete = { text = "‾" },    -- [默认值，可选]
+      changedelete = { text = "~" }, -- [默认值，可选]
+      untracked = { text = "┆" },   -- [默认值，可选]
     },
     -- 行内 blame（当前行显示作者和时间）
     current_line_blame = true,

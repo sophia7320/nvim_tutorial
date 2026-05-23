@@ -14,9 +14,9 @@
   dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     options = {
-      theme = "auto",     -- auto | catppuccin | tokyonight | rose-pine
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
+      theme = "auto",     -- auto | catppuccin | tokyonight | rose-pine [默认值，可选]
+      component_separators = { left = "", right = "" },  -- [默认值，可选]
+      section_separators = { left = "", right = "" },    -- [默认值，可选]
       disabled_filetypes = { -- 这些文件类型不显示状态栏
         statusline = { "dashboard", "alpha", "starter" },
       },
